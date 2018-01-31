@@ -1,0 +1,906 @@
+{
+  "success": true,
+  "message": "",
+  "result": [
+    {
+      "Id": 206517064,
+      "TimeStamp": "2018-01-31T18:06:23.343",
+      "Quantity": 0.05475369,
+      "Price": 0.11037015,
+      "Total": 0.00604317,
+      "FillType": "FILL",
+      "OrderType": "BUY"
+    },
+    {
+      "Id": 206517063,
+      "TimeStamp": "2018-01-31T18:06:23.343",
+      "Quantity": 0.05457219,
+      "Price": 0.11037015,
+      "Total": 0.00602314,
+      "FillType": "FILL",
+      "OrderType": "BUY"
+    },
+    {
+      "Id": 206517055,
+      "TimeStamp": "2018-01-31T18:06:21.843",
+      "Quantity": 0.01,
+      "Price": 0.11037015,
+      "Total": 0.0011037,
+      "FillType": "FILL",
+      "OrderType": "BUY"
+    },
+    {
+      "Id": 206517053,
+      "TimeStamp": "2018-01-31T18:06:21.423",
+      "Quantity": 0.01,
+      "Price": 0.11037015,
+      "Total": 0.0011037,
+      "FillType": "FILL",
+      "OrderType": "BUY"
+    },
+    {
+      "Id": 206517043,
+      "TimeStamp": "2018-01-31T18:06:16.36",
+      "Quantity": 0.54362525,
+      "Price": 0.11037015,
+      "Total": 0.06,
+      "FillType": "FILL",
+      "OrderType": "BUY"
+    },
+    {
+      "Id": 206517040,
+      "TimeStamp": "2018-01-31T18:06:14.093",
+      "Quantity": 0.4364306,
+      "Price": 0.11025094,
+      "Total": 0.04811688,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206517033,
+      "TimeStamp": "2018-01-31T18:06:13.063",
+      "Quantity": 0.05,
+      "Price": 0.11037015,
+      "Total": 0.0055185,
+      "FillType": "FILL",
+      "OrderType": "BUY"
+    },
+    {
+      "Id": 206517029,
+      "TimeStamp": "2018-01-31T18:06:12.517",
+      "Quantity": 0.06,
+      "Price": 0.11037015,
+      "Total": 0.0066222,
+      "FillType": "FILL",
+      "OrderType": "BUY"
+    },
+    {
+      "Id": 206517026,
+      "TimeStamp": "2018-01-31T18:06:11.86",
+      "Quantity": 0.0537,
+      "Price": 0.11037015,
+      "Total": 0.00592687,
+      "FillType": "FILL",
+      "OrderType": "BUY"
+    },
+    {
+      "Id": 206517023,
+      "TimeStamp": "2018-01-31T18:06:10.923",
+      "Quantity": 0.05,
+      "Price": 0.11037015,
+      "Total": 0.0055185,
+      "FillType": "FILL",
+      "OrderType": "BUY"
+    },
+    {
+      "Id": 206517016,
+      "TimeStamp": "2018-01-31T18:06:10.127",
+      "Quantity": 0.10008503,
+      "Price": 0.11037015,
+      "Total": 0.01104639,
+      "FillType": "FILL",
+      "OrderType": "BUY"
+    },
+    {
+      "Id": 206517007,
+      "TimeStamp": "2018-01-31T18:06:06.313",
+      "Quantity": 0.0734016,
+      "Price": 0.11037015,
+      "Total": 0.00810134,
+      "FillType": "FILL",
+      "OrderType": "BUY"
+    },
+    {
+      "Id": 206517002,
+      "TimeStamp": "2018-01-31T18:06:05.33",
+      "Quantity": 0.14250133,
+      "Price": 0.11037015,
+      "Total": 0.01572789,
+      "FillType": "FILL",
+      "OrderType": "BUY"
+    },
+    {
+      "Id": 206517001,
+      "TimeStamp": "2018-01-31T18:06:05.313",
+      "Quantity": 0.00959867,
+      "Price": 0.11037015,
+      "Total": 0.0010594,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "BUY"
+    },
+    {
+      "Id": 206516996,
+      "TimeStamp": "2018-01-31T18:06:04.093",
+      "Quantity": 0.39040133,
+      "Price": 0.11037015,
+      "Total": 0.04308865,
+      "FillType": "FILL",
+      "OrderType": "BUY"
+    },
+    {
+      "Id": 206516995,
+      "TimeStamp": "2018-01-31T18:06:04.093",
+      "Quantity": 0.10959767,
+      "Price": 0.11037015,
+      "Total": 0.01209631,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "BUY"
+    },
+    {
+      "Id": 206516993,
+      "TimeStamp": "2018-01-31T18:06:03.877",
+      "Quantity": 0.05,
+      "Price": 0.11037015,
+      "Total": 0.0055185,
+      "FillType": "FILL",
+      "OrderType": "BUY"
+    },
+    {
+      "Id": 206516989,
+      "TimeStamp": "2018-01-31T18:06:03.03",
+      "Quantity": 0.163,
+      "Price": 0.11037015,
+      "Total": 0.01799033,
+      "FillType": "FILL",
+      "OrderType": "BUY"
+    },
+    {
+      "Id": 206516985,
+      "TimeStamp": "2018-01-31T18:06:01.673",
+      "Quantity": 4.5,
+      "Price": 0.11025091,
+      "Total": 0.49612909,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516984,
+      "TimeStamp": "2018-01-31T18:06:01.673",
+      "Quantity": 0.05,
+      "Price": 0.11037015,
+      "Total": 0.0055185,
+      "FillType": "FILL",
+      "OrderType": "BUY"
+    },
+    {
+      "Id": 206516980,
+      "TimeStamp": "2018-01-31T18:05:59.157",
+      "Quantity": 0.5442196,
+      "Price": 0.11037015,
+      "Total": 0.06006559,
+      "FillType": "FILL",
+      "OrderType": "BUY"
+    },
+    {
+      "Id": 206516979,
+      "TimeStamp": "2018-01-31T18:05:59.157",
+      "Quantity": 0.62583354,
+      "Price": 0.11037015,
+      "Total": 0.06907334,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "BUY"
+    },
+    {
+      "Id": 206516972,
+      "TimeStamp": "2018-01-31T18:05:52.86",
+      "Quantity": 0.71195412,
+      "Price": 0.11037015,
+      "Total": 0.07857848,
+      "FillType": "FILL",
+      "OrderType": "BUY"
+    },
+    {
+      "Id": 206516968,
+      "TimeStamp": "2018-01-31T18:05:51.297",
+      "Quantity": 0.19165488,
+      "Price": 0.11025091,
+      "Total": 0.02113012,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516954,
+      "TimeStamp": "2018-01-31T18:05:46.97",
+      "Quantity": 0.22604285,
+      "Price": 0.11037015,
+      "Total": 0.02494838,
+      "FillType": "FILL",
+      "OrderType": "BUY"
+    },
+    {
+      "Id": 206516945,
+      "TimeStamp": "2018-01-31T18:05:38.627",
+      "Quantity": 0.06087353,
+      "Price": 0.11025091,
+      "Total": 0.00671136,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516944,
+      "TimeStamp": "2018-01-31T18:05:34.42",
+      "Quantity": 1.937,
+      "Price": 0.11025091,
+      "Total": 0.21355601,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516938,
+      "TimeStamp": "2018-01-31T18:05:32.33",
+      "Quantity": 0.65650524,
+      "Price": 0.11025091,
+      "Total": 0.0723803,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516937,
+      "TimeStamp": "2018-01-31T18:05:32.33",
+      "Quantity": 0.0090702,
+      "Price": 0.110251,
+      "Total": 0.00099999,
+      "FillType": "FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516925,
+      "TimeStamp": "2018-01-31T18:05:27.593",
+      "Quantity": 0.06891165,
+      "Price": 0.11037015,
+      "Total": 0.00760578,
+      "FillType": "FILL",
+      "OrderType": "BUY"
+    },
+    {
+      "Id": 206516924,
+      "TimeStamp": "2018-01-31T18:05:27.593",
+      "Quantity": 0.04408835,
+      "Price": 0.11025107,
+      "Total": 0.00486078,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "BUY"
+    },
+    {
+      "Id": 206516920,
+      "TimeStamp": "2018-01-31T18:05:27.33",
+      "Quantity": 0.11326311,
+      "Price": 0.11025091,
+      "Total": 0.01248736,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516915,
+      "TimeStamp": "2018-01-31T18:05:26.437",
+      "Quantity": 0.01,
+      "Price": 0.11025107,
+      "Total": 0.00110251,
+      "FillType": "FILL",
+      "OrderType": "BUY"
+    },
+    {
+      "Id": 206516907,
+      "TimeStamp": "2018-01-31T18:05:24.14",
+      "Quantity": 0.01,
+      "Price": 0.11037015,
+      "Total": 0.0011037,
+      "FillType": "FILL",
+      "OrderType": "BUY"
+    },
+    {
+      "Id": 206516883,
+      "TimeStamp": "2018-01-31T18:05:17.563",
+      "Quantity": 0.84590495,
+      "Price": 0.11025091,
+      "Total": 0.09326179,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516882,
+      "TimeStamp": "2018-01-31T18:05:17.563",
+      "Quantity": 0.0193082,
+      "Price": 0.11025105,
+      "Total": 0.00212874,
+      "FillType": "FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516881,
+      "TimeStamp": "2018-01-31T18:05:17.563",
+      "Quantity": 3,
+      "Price": 0.11025107,
+      "Total": 0.33075321,
+      "FillType": "FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516880,
+      "TimeStamp": "2018-01-31T18:05:17.563",
+      "Quantity": 0.13478685,
+      "Price": 0.11025107,
+      "Total": 0.01486039,
+      "FillType": "FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516876,
+      "TimeStamp": "2018-01-31T18:05:16.563",
+      "Quantity": 0.06521315,
+      "Price": 0.11025107,
+      "Total": 0.00718981,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516875,
+      "TimeStamp": "2018-01-31T18:05:16.563",
+      "Quantity": 0.01598685,
+      "Price": 0.11026752,
+      "Total": 0.00176283,
+      "FillType": "FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516874,
+      "TimeStamp": "2018-01-31T18:05:16.563",
+      "Quantity": 0.101,
+      "Price": 0.11036005,
+      "Total": 0.01114636,
+      "FillType": "FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516870,
+      "TimeStamp": "2018-01-31T18:05:14.39",
+      "Quantity": 2.94709672,
+      "Price": 0.11036122,
+      "Total": 0.32524518,
+      "FillType": "FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516869,
+      "TimeStamp": "2018-01-31T18:05:14.39",
+      "Quantity": 6.68816838,
+      "Price": 0.11036123,
+      "Total": 0.73811448,
+      "FillType": "FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516868,
+      "TimeStamp": "2018-01-31T18:05:14.39",
+      "Quantity": 0.22652876,
+      "Price": 0.11036126,
+      "Total": 0.02499999,
+      "FillType": "FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516867,
+      "TimeStamp": "2018-01-31T18:05:14.39",
+      "Quantity": 0.02169307,
+      "Price": 0.11036127,
+      "Total": 0.00239407,
+      "FillType": "FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516866,
+      "TimeStamp": "2018-01-31T18:05:14.39",
+      "Quantity": 2,
+      "Price": 0.110365,
+      "Total": 0.22073,
+      "FillType": "FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516865,
+      "TimeStamp": "2018-01-31T18:05:14.39",
+      "Quantity": 1.99001087,
+      "Price": 0.11037,
+      "Total": 0.21963749,
+      "FillType": "FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516864,
+      "TimeStamp": "2018-01-31T18:05:14.39",
+      "Quantity": 0.28517813,
+      "Price": 0.11037013,
+      "Total": 0.03147514,
+      "FillType": "FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516847,
+      "TimeStamp": "2018-01-31T18:05:08.11",
+      "Quantity": 0.01111705,
+      "Price": 0.11037015,
+      "Total": 0.00122699,
+      "FillType": "FILL",
+      "OrderType": "BUY"
+    },
+    {
+      "Id": 206516839,
+      "TimeStamp": "2018-01-31T18:05:06.03",
+      "Quantity": 0.63833705,
+      "Price": 0.11037013,
+      "Total": 0.07045334,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516838,
+      "TimeStamp": "2018-01-31T18:05:06.03",
+      "Quantity": 0.06259325,
+      "Price": 0.11037013,
+      "Total": 0.00690842,
+      "FillType": "FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516837,
+      "TimeStamp": "2018-01-31T18:05:06.03",
+      "Quantity": 1.10982617,
+      "Price": 0.11037013,
+      "Total": 0.12249165,
+      "FillType": "FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516836,
+      "TimeStamp": "2018-01-31T18:05:05.907",
+      "Quantity": 0.216425,
+      "Price": 0.11037015,
+      "Total": 0.02388685,
+      "FillType": "FILL",
+      "OrderType": "BUY"
+    },
+    {
+      "Id": 206516801,
+      "TimeStamp": "2018-01-31T18:04:55.517",
+      "Quantity": 0.20614682,
+      "Price": 0.11037013,
+      "Total": 0.02275245,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516786,
+      "TimeStamp": "2018-01-31T18:04:52",
+      "Quantity": 0.51807822,
+      "Price": 0.11037015,
+      "Total": 0.05718037,
+      "FillType": "FILL",
+      "OrderType": "BUY"
+    },
+    {
+      "Id": 206516776,
+      "TimeStamp": "2018-01-31T18:04:49.313",
+      "Quantity": 0.03355858,
+      "Price": 0.11037013,
+      "Total": 0.00370386,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516769,
+      "TimeStamp": "2018-01-31T18:04:48.233",
+      "Quantity": 1.10329245,
+      "Price": 0.11037015,
+      "Total": 0.12177055,
+      "FillType": "FILL",
+      "OrderType": "BUY"
+    },
+    {
+      "Id": 206516768,
+      "TimeStamp": "2018-01-31T18:04:48.233",
+      "Quantity": 0.01523262,
+      "Price": 0.11037015,
+      "Total": 0.00168122,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "BUY"
+    },
+    {
+      "Id": 206516767,
+      "TimeStamp": "2018-01-31T18:04:48.233",
+      "Quantity": 0.05388587,
+      "Price": 0.11037015,
+      "Total": 0.00594739,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "BUY"
+    },
+    {
+      "Id": 206516763,
+      "TimeStamp": "2018-01-31T18:04:46.517",
+      "Quantity": 0.02026267,
+      "Price": 0.11037013,
+      "Total": 0.00223639,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516757,
+      "TimeStamp": "2018-01-31T18:04:45.517",
+      "Quantity": 0.02025849,
+      "Price": 0.11037013,
+      "Total": 0.00223593,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516738,
+      "TimeStamp": "2018-01-31T18:04:40.53",
+      "Quantity": 0.22237357,
+      "Price": 0.11037013,
+      "Total": 0.02454339,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516715,
+      "TimeStamp": "2018-01-31T18:04:35.86",
+      "Quantity": 0.832921,
+      "Price": 0.11037013,
+      "Total": 0.09192959,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516710,
+      "TimeStamp": "2018-01-31T18:04:34.483",
+      "Quantity": 0.22548939,
+      "Price": 0.1104,
+      "Total": 0.02489402,
+      "FillType": "FILL",
+      "OrderType": "BUY"
+    },
+    {
+      "Id": 206516707,
+      "TimeStamp": "2018-01-31T18:04:33.547",
+      "Quantity": 6.0546527,
+      "Price": 0.11037013,
+      "Total": 0.6682528,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516706,
+      "TimeStamp": "2018-01-31T18:04:33.547",
+      "Quantity": 0.14446813,
+      "Price": 0.11037014,
+      "Total": 0.01594496,
+      "FillType": "FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516705,
+      "TimeStamp": "2018-01-31T18:04:33.547",
+      "Quantity": 2.19289717,
+      "Price": 0.11037015,
+      "Total": 0.24203038,
+      "FillType": "FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516702,
+      "TimeStamp": "2018-01-31T18:04:32.5",
+      "Quantity": 0.16378949,
+      "Price": 0.11037015,
+      "Total": 0.01807747,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516701,
+      "TimeStamp": "2018-01-31T18:04:32.483",
+      "Quantity": 0.40945468,
+      "Price": 0.11037015,
+      "Total": 0.04519157,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516697,
+      "TimeStamp": "2018-01-31T18:04:30.86",
+      "Quantity": 0.01063704,
+      "Price": 0.11037015,
+      "Total": 0.00117401,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516696,
+      "TimeStamp": "2018-01-31T18:04:29.157",
+      "Quantity": 0.16719,
+      "Price": 0.11037015,
+      "Total": 0.01845278,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516695,
+      "TimeStamp": "2018-01-31T18:04:28.61",
+      "Quantity": 0.07258937,
+      "Price": 0.11037015,
+      "Total": 0.00801169,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516690,
+      "TimeStamp": "2018-01-31T18:04:25.343",
+      "Quantity": 0.006,
+      "Price": 0.1104,
+      "Total": 0.0006624,
+      "FillType": "FILL",
+      "OrderType": "BUY"
+    },
+    {
+      "Id": 206516687,
+      "TimeStamp": "2018-01-31T18:04:25.013",
+      "Quantity": 0.01037356,
+      "Price": 0.11037015,
+      "Total": 0.00114493,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516686,
+      "TimeStamp": "2018-01-31T18:04:24.67",
+      "Quantity": 0.255878,
+      "Price": 0.11037015,
+      "Total": 0.02824129,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516685,
+      "TimeStamp": "2018-01-31T18:04:23.233",
+      "Quantity": 0.01123238,
+      "Price": 0.11037015,
+      "Total": 0.00123971,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516679,
+      "TimeStamp": "2018-01-31T18:04:21.623",
+      "Quantity": 0.41834789,
+      "Price": 0.1104,
+      "Total": 0.0461856,
+      "FillType": "FILL",
+      "OrderType": "BUY"
+    },
+    {
+      "Id": 206516672,
+      "TimeStamp": "2018-01-31T18:04:20.5",
+      "Quantity": 0.96668074,
+      "Price": 0.11037015,
+      "Total": 0.10669269,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516671,
+      "TimeStamp": "2018-01-31T18:04:20.5",
+      "Quantity": 3.53331926,
+      "Price": 0.11037102,
+      "Total": 0.38997605,
+      "FillType": "FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516669,
+      "TimeStamp": "2018-01-31T18:04:20.453",
+      "Quantity": 0.07355248,
+      "Price": 0.11037102,
+      "Total": 0.00811806,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516656,
+      "TimeStamp": "2018-01-31T18:04:15.407",
+      "Quantity": 0.52442422,
+      "Price": 0.11037102,
+      "Total": 0.05788123,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516646,
+      "TimeStamp": "2018-01-31T18:04:10.67",
+      "Quantity": 0.07173968,
+      "Price": 0.1104,
+      "Total": 0.00792006,
+      "FillType": "FILL",
+      "OrderType": "BUY"
+    },
+    {
+      "Id": 206516640,
+      "TimeStamp": "2018-01-31T18:04:06.86",
+      "Quantity": 1,
+      "Price": 0.11037102,
+      "Total": 0.11037102,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516635,
+      "TimeStamp": "2018-01-31T18:04:04.047",
+      "Quantity": 0.274348,
+      "Price": 0.11037102,
+      "Total": 0.03028006,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516634,
+      "TimeStamp": "2018-01-31T18:04:03.453",
+      "Quantity": 1,
+      "Price": 0.11037102,
+      "Total": 0.11037102,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516631,
+      "TimeStamp": "2018-01-31T18:04:03.123",
+      "Quantity": 0.01473262,
+      "Price": 0.11037102,
+      "Total": 0.00162605,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516628,
+      "TimeStamp": "2018-01-31T18:04:02.92",
+      "Quantity": 0.01188327,
+      "Price": 0.11037102,
+      "Total": 0.00131156,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516621,
+      "TimeStamp": "2018-01-31T18:03:59.513",
+      "Quantity": 0.622602,
+      "Price": 0.11037102,
+      "Total": 0.06871721,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516620,
+      "TimeStamp": "2018-01-31T18:03:57.547",
+      "Quantity": 1,
+      "Price": 0.11037102,
+      "Total": 0.11037102,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516614,
+      "TimeStamp": "2018-01-31T18:03:56.687",
+      "Quantity": 0.0194827,
+      "Price": 0.11039999,
+      "Total": 0.00215088,
+      "FillType": "FILL",
+      "OrderType": "BUY"
+    },
+    {
+      "Id": 206516611,
+      "TimeStamp": "2018-01-31T18:03:56.14",
+      "Quantity": 0.2192295,
+      "Price": 0.11037102,
+      "Total": 0.02419658,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516610,
+      "TimeStamp": "2018-01-31T18:03:53.657",
+      "Quantity": 0.43220714,
+      "Price": 0.11037102,
+      "Total": 0.04770314,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516607,
+      "TimeStamp": "2018-01-31T18:03:51.89",
+      "Quantity": 1,
+      "Price": 0.11037102,
+      "Total": 0.11037102,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516602,
+      "TimeStamp": "2018-01-31T18:03:48.623",
+      "Quantity": 0.42994883,
+      "Price": 0.11039999,
+      "Total": 0.04746634,
+      "FillType": "FILL",
+      "OrderType": "BUY"
+    },
+    {
+      "Id": 206516600,
+      "TimeStamp": "2018-01-31T18:03:48.36",
+      "Quantity": 1.29074329,
+      "Price": 0.11039999,
+      "Total": 0.14249804,
+      "FillType": "FILL",
+      "OrderType": "BUY"
+    },
+    {
+      "Id": 206516597,
+      "TimeStamp": "2018-01-31T18:03:42.297",
+      "Quantity": 0.02516466,
+      "Price": 0.11037015,
+      "Total": 0.00277742,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516596,
+      "TimeStamp": "2018-01-31T18:03:42.297",
+      "Quantity": 0.21660237,
+      "Price": 0.11037017,
+      "Total": 0.02390644,
+      "FillType": "FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516595,
+      "TimeStamp": "2018-01-31T18:03:42.297",
+      "Quantity": 2.03401697,
+      "Price": 0.11037017,
+      "Total": 0.22449479,
+      "FillType": "FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516588,
+      "TimeStamp": "2018-01-31T18:03:39.39",
+      "Quantity": 0.091492,
+      "Price": 0.11037017,
+      "Total": 0.01009798,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "SELL"
+    },
+    {
+      "Id": 206516586,
+      "TimeStamp": "2018-01-31T18:03:36.623",
+      "Quantity": 5.57037827,
+      "Price": 0.11037017,
+      "Total": 0.61480359,
+      "FillType": "PARTIAL_FILL",
+      "OrderType": "SELL"
+    }
+  ]
+}

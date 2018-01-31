@@ -1,0 +1,21 @@
+{
+  "success": true,
+  "message": "",
+  "result": [
+    {
+      "MarketName": "BTC-LTC",
+      "High": 0.01656499,
+      "Low": 0.0160001,
+      "Volume": 48121.23913564,
+      "Last": 0.01603806,
+      "BaseVolume": 783.61820524,
+      "TimeStamp": "2018-01-31T17:55:36.007",
+      "Bid": 0.01605905,
+      "Ask": 0.01607539,
+      "OpenBuyOrders": 1951,
+      "OpenSellOrders": 7580,
+      "PrevDay": 0.01642986,
+      "Created": "2014-02-13T00:00:00"
+    }
+  ]
+}
