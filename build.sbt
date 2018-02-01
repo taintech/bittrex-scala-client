@@ -14,6 +14,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-http" % "10.0.11",
   "io.argonaut" %% "argonaut" % "6.2",
   "org.bouncycastle" % "bcpkix-jdk15on" % "1.58",
+  "com.github.pureconfig" %% "pureconfig" % "0.9.0",
   "org.scalactic" %% "scalactic" % "3.0.4" % Test,
   "com.typesafe.akka" %% "akka-testkit" % "2.4.20" % Test,
   "com.typesafe.akka" %% "akka-stream-testkit" % "2.4.20" % Test,

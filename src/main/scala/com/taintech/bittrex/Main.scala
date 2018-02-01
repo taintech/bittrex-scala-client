@@ -1,10 +1,9 @@
 package com.taintech.bittrex
 
 import akka.actor.{ActorSystem, Cancellable}
-import akka.http.scaladsl.{Http, HttpExt}
 import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.{Sink, Source}
-import com.taintech.bittrex.client.{BittrexClient, BittrexClientImpl}
+import com.taintech.bittrex.client.BittrexClient
 import com.typesafe.scalalogging.LazyLogging
 
 import scala.concurrent.duration._
@@ -20,17 +19,15 @@ object Main extends App with LazyLogging with Utility {
 
   logger.info("Application started.")
 
-  implicit val timeout: FiniteDuration = 30 seconds
+  implicit val timeout: FiniteDuration = 2 seconds
 
-  val httpClient: HttpExt = Http()
-  val bittrexClient: BittrexClient = new BittrexClientImpl(httpClient)
+  val bittrexClient: BittrexClient = BittrexClient()
 
   val graph = Source
     .tick(1 second, 1 second, "tick")
     .to(Sink.foreach { _ =>
       try {
-        logger.info(
-          Await.result(bittrexClient.getMarketSummaries, timeout).toString)
+        logger.info(Await.result(bittrexClient.getMarkets, timeout).toString)
       } catch {
         case e: Exception => logger.error("Failed at tick:", e)
       }

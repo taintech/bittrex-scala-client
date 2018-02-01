@@ -1,8 +1,12 @@
 package com.taintech.bittrex.client
 
+import akka.actor.ActorSystem
+import akka.http.scaladsl.Http
+import akka.stream.ActorMaterializer
 import com.taintech.bittrex.client.OrderBookType.OrderBookType
+import com.typesafe.config.ConfigFactory
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContextExecutor, Future}
 
 trait BittrexClient extends PublicApi with MarketApi with AccountApi
 
@@ -18,7 +22,7 @@ trait PublicApi extends RestApi {
 
   def getMarketSummaries: Future[List[MarketSummary]]
 
-  def getMarketSummaries(market: String): Future[List[MarketSummary]]
+  def getMarketSummary(market: String): Future[List[MarketSummary]]
 
   def getOrderBook(market: String, orderType: OrderBookType): Future[OrderBook]
 
@@ -62,5 +66,19 @@ trait AccountApi extends RestApi {
   def getWithdrawalHistory(currency: Option[String]): Future[List[Withdrawal]]
 
   def getDepositHistory(currency: Option[String]): Future[List[Deposit]]
+
+}
+
+object BittrexClient {
+
+  def apply()(implicit system: ActorSystem,
+              materializer: ActorMaterializer,
+              executionContext: ExecutionContextExecutor): BittrexClient =
+    new BittrexClientImpl(
+      Http(),
+      pureconfig
+        .loadConfig[BittrexClientConfig](ConfigFactory.load())
+        .fold(err => sys.error(s"Failed to load configurations $err"),
+              identity))
 
 }
