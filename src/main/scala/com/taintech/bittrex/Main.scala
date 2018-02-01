@@ -11,7 +11,7 @@ import scala.concurrent.{Await, ExecutionContextExecutor}
 import scala.io.StdIn
 import scala.language.postfixOps
 
-object Main extends App with LazyLogging with Utility {
+object Main extends App with LazyLogging {
 
   implicit val system: ActorSystem = ActorSystem("bittrex-system")
   implicit val materializer: ActorMaterializer = ActorMaterializer()
