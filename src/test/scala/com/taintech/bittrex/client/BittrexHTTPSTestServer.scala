@@ -54,8 +54,8 @@ trait BittrexHTTPSTestServer extends BeforeAndAfterAll with ScalaFutures {
 
     val sslContext: SSLContext = SSLContext.getInstance("TLS")
     sslContext.init(keyManagerFactory.getKeyManagers,
-      tmf.getTrustManagers,
-      new SecureRandom)
+                    tmf.getTrustManagers,
+                    new SecureRandom)
     ConnectionContext.https(sslContext)
   }
 

@@ -1,7 +1,12 @@
 package com.taintech.bittrex.client
 
 import akka.http.scaladsl.model.HttpEntity.ChunkStreamPart
-import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpResponse, StatusCodes}
+import akka.http.scaladsl.model.{
+  ContentTypes,
+  HttpEntity,
+  HttpResponse,
+  StatusCodes
+}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{Matchers, WordSpec}
 import akka.http.scaladsl.server.Directives._
@@ -20,8 +25,8 @@ class BittrexClientSpec
   import BittrexClientSpec._
 
   implicit override val patienceConfig: PatienceConfig =
-    PatienceConfig(timeout = scaled(Span(2, Seconds)), interval = scaled(Span(5, Millis)))
-
+    PatienceConfig(timeout = scaled(Span(2, Seconds)),
+                   interval = scaled(Span(5, Millis)))
 
   "BittrexClient" should {
     "load markets" in {
