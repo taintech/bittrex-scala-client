@@ -14,7 +14,7 @@ import com.typesafe.scalalogging.LazyLogging
 import scala.concurrent.{ExecutionContextExecutor, Future, Promise}
 import scala.util.{Failure, Success}
 
-class BittrexClientImpl(val http: HttpExt, config: BittrexClientConfig)(
+class BittrexClientImpl(http: HttpExt, config: BittrexClientConfig)(
     implicit system: ActorSystem,
     materializer: ActorMaterializer,
     executionContext: ExecutionContextExecutor)

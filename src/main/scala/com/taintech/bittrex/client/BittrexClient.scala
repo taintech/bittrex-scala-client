@@ -1,7 +1,7 @@
 package com.taintech.bittrex.client
 
 import akka.actor.ActorSystem
-import akka.http.scaladsl.Http
+import akka.http.scaladsl.{Http, HttpExt}
 import akka.stream.ActorMaterializer
 import com.taintech.bittrex.client.OrderBookType.OrderBookType
 import com.typesafe.config.ConfigFactory
@@ -71,14 +71,23 @@ trait AccountApi extends RestApi {
 
 object BittrexClient {
 
+  def apply(http: HttpExt, config: BittrexClientConfig)(
+      implicit system: ActorSystem,
+      materializer: ActorMaterializer,
+      executionContext: ExecutionContextExecutor): BittrexClient =
+    new BittrexClientImpl(http, config)
+
+  def apply(bittrexClientConfig: BittrexClientConfig)(
+      implicit system: ActorSystem,
+      materializer: ActorMaterializer,
+      executionContext: ExecutionContextExecutor): BittrexClient =
+    this(Http(), bittrexClientConfig)
+
   def apply()(implicit system: ActorSystem,
               materializer: ActorMaterializer,
               executionContext: ExecutionContextExecutor): BittrexClient =
-    new BittrexClientImpl(
-      Http(),
-      pureconfig
-        .loadConfig[BittrexClientConfig](ConfigFactory.load())
-        .fold(err => sys.error(s"Failed to load configurations $err"),
-              identity))
+    this(pureconfig
+      .loadConfig[BittrexClientConfig](ConfigFactory.load())
+      .fold(err => sys.error(s"Failed to load configurations $err"), identity))
 
 }
