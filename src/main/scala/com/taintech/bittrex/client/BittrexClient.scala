@@ -81,12 +81,12 @@ object BittrexClient {
       implicit system: ActorSystem,
       materializer: ActorMaterializer,
       executionContext: ExecutionContextExecutor): BittrexClient =
-    this(Http(), bittrexClientConfig)
+    apply(Http(), bittrexClientConfig)
 
   def apply()(implicit system: ActorSystem,
               materializer: ActorMaterializer,
               executionContext: ExecutionContextExecutor): BittrexClient =
-    this(pureconfig
+    apply(pureconfig
       .loadConfig[BittrexClientConfig](ConfigFactory.load())
       .fold(err => sys.error(s"Failed to load configurations $err"), identity))
 
