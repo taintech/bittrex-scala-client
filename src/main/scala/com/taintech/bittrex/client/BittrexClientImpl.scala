@@ -9,6 +9,7 @@ import akka.stream.scaladsl.{Keep, Sink, Source}
 import akka.stream.{ActorMaterializer, OverflowStrategy}
 import argonaut.DecodeJson
 import com.taintech.bittrex.client.OrderBookType.OrderBookType
+import com.taintech.bittrex.client.OrderBookType._
 import com.typesafe.scalalogging.LazyLogging
 
 import scala.concurrent.{ExecutionContextExecutor, Future, Promise}
@@ -56,9 +57,21 @@ class BittrexClientImpl(http: HttpExt, config: BittrexClientConfig)(
       s"$publicApiUrl/getmarketsummary?market=$market")
 
   def getOrderBook(market: String,
-                   orderType: OrderBookType): Future[OrderBook] =
-    request[OrderBook](
-      s"$publicApiUrl/getorderbook?market=$market&type=$orderType")
+                   orderType: OrderBookType): Future[OrderBook] = {
+    orderType match {
+      case Both =>
+        request[OrderBook](
+          s"$publicApiUrl/getorderbook?market=$market&type=$orderType")
+      case Sell =>
+        request[List[Order]](
+          s"$publicApiUrl/getorderbook?market=$market&type=$orderType")
+          .map(OrderBook(List.empty, _))
+      case Buy =>
+        request[List[Order]](
+          s"$publicApiUrl/getorderbook?market=$market&type=$orderType")
+          .map(OrderBook(_, List.empty))
+    }
+  }
 
   def getMarketHistory(market: String): Future[List[Trade]] =
     request[List[Trade]](s"$publicApiUrl/getmarkethistory?market=$market")

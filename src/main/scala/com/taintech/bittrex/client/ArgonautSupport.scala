@@ -241,6 +241,9 @@ trait ArgonautSupport {
   implicit val orderBookResponseCodec: CodecJson[BittrexResponse[OrderBook]] =
     bittrexResponseCodec[OrderBook]
 
+  implicit val ordersResponseCodec: CodecJson[BittrexResponse[List[Order]]] =
+    bittrexResponseCodec[List[Order]]
+
   implicit val marketSummariesCodec
     : CodecJson[BittrexResponse[List[MarketSummary]]] =
     bittrexResponseCodec[List[MarketSummary]]
