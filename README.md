@@ -5,4 +5,4 @@
 
 Bittrex Scala Client is Scala library that implements robust, simple and stable http client for Bittrex REST API.
 
-Currently work in progress, only public is available.
+Currently work in progress, only Bittrex Public API is available now.
