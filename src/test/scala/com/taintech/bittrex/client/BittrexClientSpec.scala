@@ -356,27 +356,4 @@ object BittrexClientSpec {
                             "FILL",
                             "BUY")
 
-  //Helper methods to create mock data
-  def printCaseClass(caseClass: AnyRef): Unit = {
-
-    def caseClassToMap(caseClass: AnyRef): Map[String, Any] = {
-      (Map.empty[String, Any] /: caseClass.getClass.getDeclaredFields) {
-        (a, f) =>
-          f.setAccessible(true)
-          a + (f.getName -> f.get(caseClass))
-      }
-    }
-
-    println(caseClass.getClass.getSimpleName + "(")
-    println(
-      caseClassToMap(caseClass)
-        .map {
-          case (field, value) =>
-            s"$field = ${if (value.isInstanceOf[String]) s""""$value""""
-            else value.toString}"
-        }
-        .mkString(", \n"))
-    println(")")
-  }
-
 }
