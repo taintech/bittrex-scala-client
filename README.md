@@ -26,7 +26,7 @@ Bittrex Scala Client implements all API methods under official documentation in 
 
 ## Market and Account API
 
-To Use Market and Account APIs you need to create API keys under your account `Settings->Manage API Keys`. 
+To Use Market and Account APIs you need to create API keys under your account in Bittrex go to `Settings -> Manage API Keys`. 
 Then create configuration file `src/main/resources/application.conf`:
 ```
 bittrex-client {
