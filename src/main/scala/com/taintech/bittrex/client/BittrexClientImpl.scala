@@ -112,7 +112,7 @@ class BittrexClientImpl(http: HttpExt, config: BittrexClientConfig)(
                            ))
 
   override def openOrders(market: String): Future[List[OpenOrder]] =
-    queryMarket[List[OpenOrder]]("cancel",
+    queryMarket[List[OpenOrder]]("getopenorders",
                                  Map(
                                    "market" -> market
                                  ))
@@ -161,7 +161,7 @@ class BittrexClientImpl(http: HttpExt, config: BittrexClientConfig)(
   private def performHttpGet(url: String,
                              headers: immutable.Seq[HttpHeader] = Nil) = {
     val promisedResponse = Promise[HttpResponse]
-    logger.debug(s"Performing get request to url: $url with headers $headers")
+    logger.debug(s"Performing get request using port $port to url: $url with headers $headers")
     queue
       .offer(HttpRequest(uri = url, headers = headers) -> promisedResponse)
       .flatMap(_ => promisedResponse.future)
@@ -186,7 +186,7 @@ class BittrexClientImpl(http: HttpExt, config: BittrexClientConfig)(
       if (params.isEmpty) baseUrl
       else
         baseUrl + params.map { case (k, v) => s"$k=$v" }.mkString("?", "&", "")
-    s"https://$host:$port$url"
+    s"https://$host$url"
   }
 
   private def apiSign(url: String, apiSecret: String) = {
