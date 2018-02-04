@@ -108,7 +108,7 @@ class BittrexClientImpl(http: HttpExt, config: BittrexClientConfig)(
   override def cancel(orderUuid: OrderUuid): Future[OrderUuid] =
     queryMarket[OrderUuid]("cancel",
                            Map(
-                             "uuid" -> orderUuid.toString
+                             "uuid" -> orderUuid.value
                            ))
 
   override def openOrders(market: String): Future[List[OpenOrder]] =
@@ -117,28 +117,49 @@ class BittrexClientImpl(http: HttpExt, config: BittrexClientConfig)(
                                    "market" -> market
                                  ))
 
-  override def getBalances: Future[List[Balance]] = ???
+  override def getBalances: Future[List[Balance]] =
+    queryAccount[List[Balance]]("getbalances")
 
-  override def getBalance(currency: String): Future[Balance] = ???
+  override def getBalance(currency: String): Future[Balance] =
+    queryAccount[Balance]("getbalance",
+      Map(
+        "currency" -> currency
+      ))
 
-  override def getAddress(currency: String): Future[CryptoAddress] = ???
+  override def getAddress(currency: String): Future[CryptoAddress] =
+    queryAccount[CryptoAddress]("getdepositaddress",
+      Map(
+        "currency" -> currency
+      ))
 
   override def accountWithdraw(currency: String,
                                quantity: BigDecimal,
                                address: String,
                                paymentId: Option[String]): Future[OrderUuid] =
-    ???
+    queryAccount[OrderUuid]("withdraw",
+      Map(
+        "currency" -> currency,
+        "quantity" -> quantity.toString(),
+        "address" -> address
+      ) ++ paymentId.map(("paymentid", _)).toMap)
 
-  override def getOrder(orderUuid: OrderUuid): Future[ClosedOrder] = ???
+  override def getOrder(orderUuid: OrderUuid): Future[ClosedOrder] =
+    queryAccount[ClosedOrder]("getorder",
+      Map(
+        "uuid" -> orderUuid.value
+      ))
 
   override def getOrderHistory(
-      market: Option[String]): Future[List[OrderHistory]] = ???
+      market: Option[String]): Future[List[OrderHistory]] =
+    queryAccount[List[OrderHistory]]("getorderhistory", market.map(("market", _)).toMap)
 
   override def getWithdrawalHistory(
-      currency: Option[String]): Future[List[Withdrawal]] = ???
+      currency: Option[String]): Future[List[Withdrawal]] =
+    queryAccount[List[Withdrawal]]("getwithdrawalhistory", currency.map(("currency", _)).toMap)
 
   override def getDepositHistory(
-      currency: Option[String]): Future[List[Deposit]] = ???
+      currency: Option[String]): Future[List[Deposit]] =
+    queryAccount[List[Deposit]]("getdeposithistory", currency.map(("currency", _)).toMap)
 
   private def getPublic[T](method: String,
                            params: Map[String, String] = Map.empty)(
@@ -148,6 +169,10 @@ class BittrexClientImpl(http: HttpExt, config: BittrexClientConfig)(
   private def queryMarket[T](method: String, params: Map[String, String])(
       implicit decodeJson: DecodeJson[BittrexResponse[T]]) =
     get[T](s"$apiPath/market/$method", params, signed = true)
+
+  private def queryAccount[T](method: String, params: Map[String, String] = Map.empty)(
+    implicit decodeJson: DecodeJson[BittrexResponse[T]]) =
+    get[T](s"$apiPath/account/$method", params, signed = true)
 
   private def get[T](url: String, params: Map[String, String], signed: Boolean)(
       implicit decodeJson: DecodeJson[BittrexResponse[T]]): Future[T] = {

@@ -27,7 +27,7 @@ object Main extends App with LazyLogging {
     .tick(1 second, 1 second, "tick")
     .to(Sink.foreach { _ =>
       try {
-        logger.info(Await.result(bittrexClient.openOrders("BTC-ADA"), timeout).toString)
+        logger.info(Await.result(bittrexClient.getBalances, timeout).toString)
       } catch {
         case e: Exception => logger.error("Failed at tick:", e)
       }
