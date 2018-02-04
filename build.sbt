@@ -1,5 +1,13 @@
 name := "bittrex-client"
 
+organization := "com.github.taintech"
+
+homepage := Some(url("https://github.com/taintech/bittrex-scala-client"))
+
+licenses := Seq(
+  "MIT" -> url(
+    "https://github.com/taintech/bittrex-scala-client/blob/master/LICENSE"))
+
 version := "0.1"
 
 scalaVersion := "2.12.4"
@@ -21,3 +29,26 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-http-testkit" % "10.0.11" % Test,
   "org.scalatest" %% "scalatest" % "3.0.4" % Test
 )
+
+developers := List(
+  Developer(id = "taintech",
+            name = "Rinat Tainov",
+            email = "rinattainov@gmail.com.com",
+            url = new URL(s"http://github.com/taintech"))
+)
+
+releasePublishArtifactsAction := PgpKeys.publishSigned.value
+publishMavenStyle := true
+publishArtifact in Test := false
+publishTo := Some(
+  if (isSnapshot.value) Opts.resolver.sonatypeSnapshots
+  else Opts.resolver.sonatypeStaging)
+
+credentials ++= (for {
+  username <- sys.env.get("SONATYPE_USERNAME")
+  password <- sys.env.get("SONATYPE_PASSWORD")
+} yield
+  Credentials("Sonatype Nexus Repository Manager",
+              "oss.sonatype.org",
+              username,
+              password)).toSeq
