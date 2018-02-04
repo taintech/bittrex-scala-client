@@ -1,5 +1,6 @@
 package com.taintech.bittrex.client.codecs
 
+import akka.Done
 import akka.http.scaladsl.marshalling.{Marshaller, ToEntityMarshaller}
 import akka.http.scaladsl.model.ContentTypeRange
 import akka.http.scaladsl.model.MediaTypes.`application/json`
@@ -146,7 +147,7 @@ trait ArgonautSupport {
       "CancelInitiated",
       "ImmediateOrCancel",
       "IsConditional",
-      "Condition" //ignoring "ConditionTarget", no support more than 22 attributes, can be done by merge later on
+      "Condition" //TODO ignoring "ConditionTarget", no support more than 22 attributes, can be done by merge later on
     )
 
   implicit val orderHistoryCodecs: CodecJson[OrderHistory] =
@@ -167,8 +168,8 @@ trait ArgonautSupport {
       "ImmediateOrCancel"
     )
 
-  implicit val withdrawalHistoryCodes: CodecJson[Withdrawal] =
-    casecodec11(Withdrawal.apply, Withdrawal.unapply)(
+  implicit val withdrawalHistoryCodes: CodecJson[WithdrawalHistory] =
+    casecodec11(WithdrawalHistory.apply, WithdrawalHistory.unapply)(
       "PaymentUuid",
       "Currency",
       "Amount",
@@ -182,8 +183,8 @@ trait ArgonautSupport {
       "InvalidAddress"
     )
 
-  implicit val depositHistoryCodesWithdrawal: CodecJson[Deposit] =
-    casecodec11(Deposit.apply, Deposit.unapply)(
+  implicit val depositHistoryCodesWithdrawal: CodecJson[DepositHistory] =
+    casecodec11(DepositHistory.apply, DepositHistory.unapply)(
       "PaymentUuid",
       "Currency",
       "Amount",
@@ -203,13 +204,20 @@ trait ArgonautSupport {
                                                                      "message",
                                                                      "result")
 
+  implicit val bittrexResponseDoneDecoder: DecodeJson[BittrexResponse[Done]] =
+    DecodeJson(c =>
+      for {
+        success <- (c --\ "success").as[Boolean]
+        message <- (c --\ "message").as[String]
+      } yield BittrexResponse(success, message, Some(Done)))
+
   implicit val withdrawalHistoryResponseCodec
-    : CodecJson[BittrexResponse[List[Withdrawal]]] =
-    bittrexResponseCodec[List[Withdrawal]]
+    : CodecJson[BittrexResponse[List[WithdrawalHistory]]] =
+    bittrexResponseCodec[List[WithdrawalHistory]]
 
   implicit val depositHistoryResponseCodec
-    : CodecJson[BittrexResponse[List[Deposit]]] =
-    bittrexResponseCodec[List[Deposit]]
+    : CodecJson[BittrexResponse[List[DepositHistory]]] =
+    bittrexResponseCodec[List[DepositHistory]]
 
   implicit val orderHistoryResponseCodec
     : CodecJson[BittrexResponse[List[OrderHistory]]] =
@@ -278,11 +286,13 @@ trait ArgonautSupport {
         case Right(json)   => json
         case Left(message) => sys.error(message)
       }
+
     def decode(json: Json) =
       implicitly[DecodeJson[A]].decodeJson(json).result match {
         case Right(entity) => entity
         case Left((m, h))  => sys.error(m + " - " + h)
       }
+
     jsonStringUnmarshaller.map(parse).map(decode)
   }
 

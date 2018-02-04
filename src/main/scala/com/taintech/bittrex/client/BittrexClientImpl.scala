@@ -1,8 +1,6 @@
 package com.taintech.bittrex.client
 
-import javax.crypto.Mac
-import javax.crypto.spec.SecretKeySpec
-
+import akka.Done
 import akka.actor.ActorSystem
 import akka.http.scaladsl.HttpExt
 import akka.http.scaladsl.model.headers.RawHeader
@@ -12,11 +10,10 @@ import akka.http.scaladsl.unmarshalling.Unmarshal
 import akka.stream.scaladsl.{Keep, Sink, Source}
 import akka.stream.{ActorMaterializer, OverflowStrategy}
 import argonaut.DecodeJson
-import com.taintech.bittrex.client.OrderBookType.OrderBookType
-import com.taintech.bittrex.client.OrderBookType._
+import com.taintech.bittrex.client.OrderBookType.{OrderBookType, _}
 import com.taintech.bittrex.client.codecs.ArgonautSupport
+import com.taintech.bittrex.client.crypto.SignProvider
 import com.typesafe.scalalogging.LazyLogging
-import org.bouncycastle.util.encoders.Hex
 
 import scala.collection.immutable
 import scala.concurrent.{ExecutionContextExecutor, Future, Promise}
@@ -28,6 +25,7 @@ class BittrexClientImpl(http: HttpExt, config: BittrexClientConfig)(
     executionContext: ExecutionContextExecutor)
     extends BittrexClient
     with ArgonautSupport
+    with SignProvider
     with LazyLogging {
 
   import config._
@@ -105,11 +103,11 @@ class BittrexClientImpl(http: HttpExt, config: BittrexClientConfig)(
                              "rate" -> rate.toString()
                            ))
 
-  override def cancel(orderUuid: OrderUuid): Future[OrderUuid] =
-    queryMarket[OrderUuid]("cancel",
-                           Map(
-                             "uuid" -> orderUuid.value
-                           ))
+  override def cancel(orderUuid: OrderUuid): Future[Done] =
+    queryMarket[Done]("cancel",
+                      Map(
+                        "uuid" -> orderUuid.value
+                      ))
 
   override def openOrders(market: String): Future[List[OpenOrder]] =
     queryMarket[List[OpenOrder]]("getopenorders",
@@ -126,7 +124,7 @@ class BittrexClientImpl(http: HttpExt, config: BittrexClientConfig)(
                             "currency" -> currency
                           ))
 
-  override def getAddress(currency: String): Future[CryptoAddress] =
+  override def getDepositAddress(currency: String): Future[CryptoAddress] =
     queryAccount[CryptoAddress]("getdepositaddress",
                                 Map(
                                   "currency" -> currency
@@ -155,14 +153,14 @@ class BittrexClientImpl(http: HttpExt, config: BittrexClientConfig)(
                                      market.map(("market", _)).toMap)
 
   override def getWithdrawalHistory(
-      currency: Option[String]): Future[List[Withdrawal]] =
-    queryAccount[List[Withdrawal]]("getwithdrawalhistory",
-                                   currency.map(("currency", _)).toMap)
+      currency: Option[String]): Future[List[WithdrawalHistory]] =
+    queryAccount[List[WithdrawalHistory]]("getwithdrawalhistory",
+                                          currency.map(("currency", _)).toMap)
 
   override def getDepositHistory(
-      currency: Option[String]): Future[List[Deposit]] =
-    queryAccount[List[Deposit]]("getdeposithistory",
-                                currency.map(("currency", _)).toMap)
+      currency: Option[String]): Future[List[DepositHistory]] =
+    queryAccount[List[DepositHistory]]("getdeposithistory",
+                                       currency.map(("currency", _)).toMap)
 
   private def getPublic[T](method: String,
                            params: Map[String, String] = Map.empty)(
@@ -219,16 +217,6 @@ class BittrexClientImpl(http: HttpExt, config: BittrexClientConfig)(
     s"https://$host$url"
   }
 
-  private def apiSign(url: String, apiSecret: String) = {
-    val keyBytes = apiSecret.getBytes("UTF-8")
-    val HMAC_SHA256 = "HmacSHA512"
-    val sha512_HMAC = Mac.getInstance(HMAC_SHA256)
-    val keySpec = new SecretKeySpec(keyBytes, HMAC_SHA256)
-    sha512_HMAC.init(keySpec)
-    val dataBytes = sha512_HMAC.doFinal(url.getBytes("UTF-8"))
-    Hex.toHexString(dataBytes)
-  }
-
   private def signedRequest(baseUrl: String,
                             params: Map[String, String]): Future[HttpResponse] =
     accountKey match {
@@ -238,7 +226,7 @@ class BittrexClientImpl(http: HttpExt, config: BittrexClientConfig)(
           Map("apiKey" -> apiKey,
               "nonce" -> System.currentTimeMillis().toString)
         val url = buildUrl(baseUrl, apiKeyParams ++ params)
-        val apiSignHeader = List(RawHeader("apisign", apiSign(url, apiSecret)))
+        val apiSignHeader = List(RawHeader("apisign", sign(url, apiSecret)))
         performHttpGet(url, apiSignHeader)
     }
 

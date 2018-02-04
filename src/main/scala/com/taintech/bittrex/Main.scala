@@ -19,12 +19,12 @@ object Main extends App with LazyLogging {
 
   logger.info("Application started.")
 
-  implicit val timeout: FiniteDuration = 2 seconds
+  implicit val timeout: FiniteDuration = 5 seconds
 
   val bittrexClient: BittrexClient = BittrexClient()
 
   val graph = Source
-    .tick(1 second, 1 second, "tick")
+    .tick(1 second, 5 second, "tick")
     .to(Sink.foreach { _ =>
       try {
         logger.info(Await.result(bittrexClient.getBalances, timeout).toString)

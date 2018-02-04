@@ -1,5 +1,6 @@
 package com.taintech.bittrex.client
 
+import akka.Done
 import akka.http.scaladsl.model.HttpEntity.ChunkStreamPart
 import akka.http.scaladsl.model.{
   ContentTypes,
@@ -7,12 +8,12 @@ import akka.http.scaladsl.model.{
   HttpResponse,
   StatusCodes
 }
-import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.{Matchers, WordSpec}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.{PathMatchers, Route}
 import akka.stream.scaladsl.StreamConverters
+import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Millis, Seconds, Span}
+import org.scalatest.{Matchers, WordSpec}
 
 import scala.language.postfixOps
 
@@ -151,6 +152,80 @@ class BittrexClientSpec
         exception.getMessage should include("INVALID_MARKET")
       }
     }
+    "place buy limit order for Litecoin" in {
+      whenReady(testClient.buyLimit("BTC-LTC", 69.69, 96.96)) { result =>
+        result should be(testOrderUuid)
+      }
+    }
+    "place sell limit order for Litecoin" in {
+      whenReady(testClient.sellLimit("BTC-LTC", 96.96, 69.69)) { result =>
+        result should be(testOrderUuid)
+      }
+    }
+    "cancel an order" in {
+      whenReady(testClient.cancel(testOrderUuid)) { result =>
+        result should be(Done)
+      }
+    }
+    "get open orders for Litecoin" in {
+      whenReady(testClient.openOrders("BTC-LTC")) { result =>
+        result should not be empty
+        result should have size 2
+        result should contain(testOpenOrder)
+      }
+    }
+    "get account balances" in {
+      whenReady(testClient.getBalances) { result =>
+        result should not be empty
+        result should have size 2
+        result should contain(testBitcoinBalance1)
+      }
+    }
+    "get account balance for Bitcoin" in {
+      whenReady(testClient.getBalance("BTC")) { result =>
+        result should be(testBitcoinBalance2)
+      }
+    }
+    "get account deposit address for Bitcoin" in {
+      whenReady(testClient.getDepositAddress("BTC")) { result =>
+        result should be(testCryptoAddress)
+      }
+    }
+    "withdraw Bitcoins from account" in {
+      whenReady(
+        testClient.accountWithdraw("BTC",
+                                   69.69,
+                                   "Vy5SKeKGXUHKS2WVpJ76HYuKAu3URastUo",
+                                   Some("test-payment-id"))) { result =>
+        result should be(testOrderUuid)
+      }
+    }
+    "get account open order" in {
+      whenReady(testClient.getOrder(testOrderUuid)) { result =>
+        result should be(testClosedOrder)
+      }
+    }
+    "get account order history" in {
+      whenReady(testClient.getOrderHistory(Some("BTC-LTC"))) { result =>
+        result should not be empty
+        result should have size 2
+        result should contain(testOrderHistory)
+      }
+    }
+    "get account withdrawal history" in {
+      whenReady(testClient.getWithdrawalHistory(Some("BTC"))) { result =>
+        result should not be empty
+        result should have size 2
+        result should contain(testWithdrawalHistory)
+      }
+    }
+    "get account deposit history" in {
+      whenReady(testClient.getDepositHistory(Some("BTC"))) { result =>
+        result should not be empty
+        result should have size 2
+        result should contain(testDepositHistory)
+      }
+    }
 
   }
 
@@ -159,8 +234,7 @@ class BittrexClientSpec
 
   private def resourceRoute(url: String,
                             resource: String,
-                            expectedParams: Map[String, String] =
-                              Map.empty[String, String]) =
+                            expectedParams: Map[String, String]) =
     (get & path(PathMatchers.separateOnSlashes(url))) {
       parameterMap { params =>
         if (params == expectedParams) {
@@ -178,7 +252,19 @@ class BittrexClientSpec
             ))
         } else reject
       }
-    }
+    } ~ reject
+
+  private def resourceRouteWithApiSign(url: String,
+                                       resource: String,
+                                       expectedParams: Map[String, String]) =
+    headerValueByName("apisign") { _ =>
+      parameterMap { params =>
+        resourceRoute(url,
+                      resource,
+                      expectedParams ++ params.filterKeys(_ == "nonce") ++ Map(
+                        "apiKey" -> apiKey))
+      }
+    } ~ reject
 
   private def publicApiRoute(url: String,
                              resource: String,
@@ -187,6 +273,22 @@ class BittrexClientSpec
     resourceRoute(s"$apiPath/public/$url",
                   s"public-api/$resource",
                   expectedParams)
+
+  private def marketApiRoute(url: String,
+                             resource: String,
+                             expectedParams: Map[String, String] =
+                               Map.empty[String, String]) =
+    resourceRouteWithApiSign(s"$apiPath/market/$url",
+                             s"market-api/$resource",
+                             expectedParams)
+
+  private def accountApiRoute(url: String,
+                              resource: String,
+                              expectedParams: Map[String, String] =
+                                Map.empty[String, String]) =
+    resourceRouteWithApiSign(s"$apiPath/account/$url",
+                             s"account-api/$resource",
+                             expectedParams)
 
   val publicApiRoutes: Route = publicApiRoute("getmarkets", "getmarkets.json") ~
     publicApiRoute("getcurrencies", "getcurrencies.json") ~
@@ -234,6 +336,71 @@ class BittrexClientSpec
                    "getmarkethistory-bla-bla.json",
                    Map("market" -> "bla-bla"))
 
+  protected val marketApiRoutes: Route = marketApiRoute("buylimit",
+                                                        "buylimit.json",
+                                                        Map(
+                                                          "market" -> "BTC-LTC",
+                                                          "quantity" -> "69.69",
+                                                          "rate" -> "96.96"
+                                                        )) ~ marketApiRoute(
+    "selllimit",
+    "selllimit.json",
+    Map(
+      "market" -> "BTC-LTC",
+      "quantity" -> "96.96",
+      "rate" -> "69.69"
+    )) ~ marketApiRoute("cancel",
+                        "cancel.json",
+                        Map(
+                          "uuid" -> "e606d53c-8d70-11e3-94b5-425861b86ab6",
+                        )) ~ marketApiRoute("getopenorders",
+                                            "getopenorders.json",
+                                            Map(
+                                              "market" -> "BTC-LTC",
+                                            ))
+
+  protected val accountApiRoutes: Route = accountApiRoute("getbalances",
+                                                          "getbalances.json") ~
+    accountApiRoute("getbalance",
+                    "getbalance.json",
+                    Map(
+                      "currency" -> "BTC"
+                    )) ~ accountApiRoute("getbalance",
+                                         "getbalance.json",
+                                         Map(
+                                           "currency" -> "BTC"
+                                         )) ~ accountApiRoute(
+    "getdepositaddress",
+    "getdepositaddress.json",
+    Map(
+      "currency" -> "BTC"
+    )) ~ accountApiRoute("withdraw",
+                         "withdraw.json",
+                         Map(
+                           "currency" -> "BTC",
+                           "quantity" -> "69.69",
+                           "address" -> "Vy5SKeKGXUHKS2WVpJ76HYuKAu3URastUo",
+                           "paymentid" -> "test-payment-id"
+                         )) ~ accountApiRoute(
+    "getorder",
+    "getorder.json",
+    Map(
+      "uuid" -> "e606d53c-8d70-11e3-94b5-425861b86ab6"
+    )) ~ accountApiRoute("getorderhistory",
+                         "getorderhistory.json",
+                         Map(
+                           "market" -> "BTC-LTC"
+                         )) ~ accountApiRoute("getwithdrawalhistory",
+                                              "getwithdrawalhistory.json",
+                                              Map(
+                                                "currency" -> "BTC"
+                                              )) ~ accountApiRoute(
+    "getdeposithistory",
+    "getdeposithistory.json",
+    Map(
+      "currency" -> "BTC"
+    ))
+
 }
 
 object BittrexClientSpec {
@@ -242,12 +409,15 @@ object BittrexClientSpec {
   val testServerPort: Int = 9069
   val bufferSize = 10
   val apiPath = "test"
+  val apiKey = "just4test-key"
+  val apiSecret = "just4test-secret"
+  val accountKey = AccountKey(apiKey, apiSecret)
   val testConf =
     BittrexClientConfig(host,
                         testServerPort,
                         "/" + apiPath,
                         Some(bufferSize),
-                        accountKey = None)
+                        Some(accountKey))
 
   val market = Market(
     marketName = "BTC-LTC",
@@ -361,4 +531,121 @@ object BittrexClientSpec {
                             "FILL",
                             "BUY")
 
+  val testOrderUuid = OrderUuid(value = "e606d53c-8d70-11e3-94b5-425861b86ab6")
+
+  val testOpenOrder = OpenOrder(
+    quantity = 5.00000000,
+    quantityRemaining = 5.00000000,
+    closed = None,
+    uuid = None,
+    price = 0E-8,
+    orderUuid = "09aa5bb6-8232-41aa-9b78-a5a1093e0211",
+    opened = "2014-07-09T03:55:48.77",
+    exchange = "BTC-LTC",
+    condition = None,
+    pricePerUnit = None,
+    isConditional = false,
+    cancelInitiated = false,
+    commissionPaid = 0E-8,
+    orderType = "LIMIT_SELL",
+    conditionTarget = None,
+    limit = 2.00000000,
+    immediateOrCancel = false
+  )
+
+  val testBitcoinBalance1 = Balance(
+    requested = Some(false),
+    uuid = None,
+    balance = 14.21549076,
+    cryptoAddress = Some("1Mrcdr6715hjda34pdXuLqXcju6qgwHA31"),
+    currency = "BTC",
+    available = 14.21549076,
+    pending = 0E-8
+  )
+
+  val testBitcoinBalance2 = Balance(
+    requested = Some(false),
+    uuid = None,
+    balance = 4.21549076,
+    cryptoAddress = Some("1MacMr6715hjds342dXuLqXcju6fgwHA31"),
+    currency = "BTC",
+    available = 4.21549076,
+    pending = 0E-8
+  )
+
+  val testCryptoAddress = CryptoAddress(
+    currency = "VTC",
+    address = Some("Vy5SKeKGXUHKS2WVpJ76HYuKAu3URastUo")
+  )
+
+  val testClosedOrder = ClosedOrder(
+    reserved = 0.00001000,
+    quantity = 1000.00000000,
+    quantityRemaining = 1000.00000000,
+    closed = None,
+    price = 0E-8,
+    orderUuid = "0cb4c4e4-bdc7-4e13-8c13-430e587d2cc1",
+    commissionReserved = 2E-8,
+    accountId = None,
+    opened = "2014-07-13T07:45:46.27",
+    exchange = "BTC-SHLD",
+    reserveRemaining = 0.00001000,
+    sentinel = "6c454604-22e2-4fb4-892e-179eede20972",
+    condition = "NONE",
+    commissionReserveRemaining = 2E-8,
+    pricePerUnit = None,
+    isConditional = false,
+    cancelInitiated = false,
+    commissionPaid = 0E-8,
+    isOpen = true,
+    orderType = "LIMIT_BUY",
+    limit = 1E-8,
+    immediateOrCancel = false
+  )
+
+  val testOrderHistory = OrderHistory(
+    quantity = 100000.00000000,
+    commission = 0E-8,
+    quantityRemaining = 100000.00000000,
+    price = 0E-8,
+    orderUuid = "fd97d393-e9b9-4dd1-9dbf-f288fc72a185",
+    timeStamp = "2014-07-09T04:01:00.667",
+    exchange = "BTC-LTC",
+    condition = None,
+    pricePerUnit = None,
+    isConditional = false,
+    orderType = "LIMIT_BUY",
+    conditionTarget = None,
+    limit = 1E-8,
+    immediateOrCancel = false
+  )
+
+  val testWithdrawalHistory = WithdrawalHistory(
+    authorized = true,
+    amount = 17.00000000,
+    opened = "2014-07-09T04:24:47.217",
+    paymentUuid = "b52c7a5c-90c6-4c6e-835c-e16df12708b1",
+    txCost = 0.00020000,
+    canceled = true,
+    invalidAddress = false,
+    currency = "BTC",
+    address = "1DeaaFBdbB5nrHj87x3NHS4onvw1GPNyAu",
+    pendingPayment = false,
+    txId = None
+  )
+
+  val testDepositHistory = DepositHistory(
+    authorized = true,
+    amount = 0.00156121,
+    opened = "2014-07-11T03:41:25.323",
+    paymentUuid = "554ec664-8842-4fe9-b491-06225becbd59",
+    txCost = 0.00020000,
+    canceled = false,
+    invalidAddress = false,
+    currency = "BTC",
+    address = "1K37yQZaGrPKNTZ5KNP792xw8f7XbXxetE",
+    pendingPayment = false,
+    txId =
+      Some("70cf6fdccb9bd38e1a930e13e4ae6299d678ed6902da710fa3cc8d164f9be126")
+  )
 }

@@ -1,22 +1,14 @@
 package com.taintech.bittrex.client
 
-import java.io.{BufferedReader, InputStream, InputStreamReader}
+import java.io.InputStream
 import java.security.{KeyStore, SecureRandom}
 import javax.net.ssl.{KeyManagerFactory, SSLContext, TrustManagerFactory}
 
 import akka.actor.ActorSystem
-import akka.http.scaladsl.model.{
-  ContentTypes,
-  HttpEntity,
-  HttpResponse,
-  StatusCodes
-}
-import akka.http.scaladsl.model.HttpEntity.ChunkStreamPart
 import akka.http.scaladsl.server.Directives._
-import akka.http.scaladsl.{ConnectionContext, Http, HttpsConnectionContext}
 import akka.http.scaladsl.server.Route
+import akka.http.scaladsl.{ConnectionContext, Http, HttpsConnectionContext}
 import akka.stream.ActorMaterializer
-import akka.stream.scaladsl.StreamConverters
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{BeforeAndAfterAll, Suite}
 
@@ -34,6 +26,8 @@ trait BittrexHTTPSTestServer extends BeforeAndAfterAll with ScalaFutures {
   protected val port: Int
 
   protected val publicApiRoutes: Route
+  protected val marketApiRoutes: Route
+  protected val accountApiRoutes: Route
 
   val https: HttpsConnectionContext = {
     val password: Array[Char] = "just4test".toCharArray
@@ -61,7 +55,11 @@ trait BittrexHTTPSTestServer extends BeforeAndAfterAll with ScalaFutures {
 
   override protected def beforeAll(): Unit = {
     Http()
-      .bindAndHandle(publicApiRoutes, hostname, port, connectionContext = https)
+      .bindAndHandle(
+        publicApiRoutes ~ marketApiRoutes ~ accountApiRoutes ~ reject,
+        hostname,
+        port,
+        connectionContext = https)
       .futureValue
   }
 

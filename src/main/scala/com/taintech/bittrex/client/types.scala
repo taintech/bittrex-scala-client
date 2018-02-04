@@ -2,36 +2,36 @@ package com.taintech.bittrex.client
 
 import com.taintech.bittrex.client
 
-case class BittrexResponse[T](
+final case class BittrexResponse[T](
     success: Boolean,
     message: String,
     result: Option[T]
 )
 
-case class Market(marketCurrency: String,
-                  baseCurrency: String,
-                  marketCurrencyLong: String,
-                  baseCurrencyLong: String,
-                  minTradeSize: BigDecimal,
-                  marketName: String,
-                  isActive: Boolean,
-                  created: String,
-                  notice: Option[String],
-                  isSponsored: Option[Boolean],
-                  logoUrl: Option[String])
-
-case class CurrencyInfo(currency: String,
-                        currencyLong: String,
-                        minConfirmation: BigDecimal,
-                        txFee: BigDecimal,
+final case class Market(marketCurrency: String,
+                        baseCurrency: String,
+                        marketCurrencyLong: String,
+                        baseCurrencyLong: String,
+                        minTradeSize: BigDecimal,
+                        marketName: String,
                         isActive: Boolean,
-                        coinType: String,
-                        baseAddress: Option[String],
-                        notice: Option[String])
+                        created: String,
+                        notice: Option[String],
+                        isSponsored: Option[Boolean],
+                        logoUrl: Option[String])
 
-case class Ticker(bid: BigDecimal, ask: BigDecimal, last: BigDecimal)
+final case class CurrencyInfo(currency: String,
+                              currencyLong: String,
+                              minConfirmation: BigDecimal,
+                              txFee: BigDecimal,
+                              isActive: Boolean,
+                              coinType: String,
+                              baseAddress: Option[String],
+                              notice: Option[String])
 
-case class MarketSummary(
+final case class Ticker(bid: BigDecimal, ask: BigDecimal, last: BigDecimal)
+
+final case class MarketSummary(
     marketName: String,
     high: BigDecimal,
     low: BigDecimal,
@@ -48,12 +48,12 @@ case class MarketSummary(
     displayMarketName: Option[String]
 )
 
-case class Order(
+final case class Order(
     quantity: BigDecimal,
     rate: BigDecimal
 )
 
-case class OrderBook(buyOrders: List[Order], sellOrders: List[Order])
+final case class OrderBook(buyOrders: List[Order], sellOrders: List[Order])
 
 object OrderBookType extends Enumeration {
   type OrderBookType = Value
@@ -62,7 +62,7 @@ object OrderBookType extends Enumeration {
   val Both: client.OrderBookType.Value = Value("both")
 }
 
-case class Trade(
+final case class Trade(
     id: BigDecimal,
     timestamp: String,
     quantity: BigDecimal,
@@ -72,11 +72,11 @@ case class Trade(
     orderType: String
 )
 
-case class OrderUuid(
+final case class OrderUuid(
     value: String
 )
 
-case class OpenOrder(
+final case class OpenOrder(
     uuid: Option[String],
     orderUuid: String,
     exchange: String,
@@ -96,7 +96,7 @@ case class OpenOrder(
     conditionTarget: Option[String]
 )
 
-case class Balance(
+final case class Balance(
     currency: String,
     balance: BigDecimal,
     available: BigDecimal,
@@ -106,12 +106,12 @@ case class Balance(
     uuid: Option[String]
 )
 
-case class CryptoAddress(
+final case class CryptoAddress(
     currency: String,
     address: Option[String]
 )
 
-case class ClosedOrder(
+final case class ClosedOrder(
     accountId: Option[String],
     orderUuid: String,
     exchange: String,
@@ -136,7 +136,7 @@ case class ClosedOrder(
     condition: String //ignoring "ConditionTarget", no support more than 22 attributes, can be done by merge later on
 )
 
-case class OrderHistory(
+final case class OrderHistory(
     orderUuid: String,
     exchange: String,
     timeStamp: String,
@@ -153,7 +153,7 @@ case class OrderHistory(
     immediateOrCancel: Boolean
 )
 
-case class Withdrawal(
+final case class WithdrawalHistory(
     paymentUuid: String,
     currency: String,
     amount: BigDecimal,
@@ -162,12 +162,12 @@ case class Withdrawal(
     authorized: Boolean,
     pendingPayment: Boolean,
     txCost: BigDecimal,
-    txId: String,
+    txId: Option[String],
     canceled: Boolean,
     invalidAddress: Boolean
 )
 
-case class Deposit(
+final case class DepositHistory(
     paymentUuid: String,
     currency: String,
     amount: BigDecimal,
@@ -176,7 +176,7 @@ case class Deposit(
     authorized: Boolean,
     pendingPayment: Boolean,
     txCost: BigDecimal,
-    txId: String,
+    txId: Option[String],
     canceled: Boolean,
     invalidAddress: Boolean
 )

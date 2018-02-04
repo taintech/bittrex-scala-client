@@ -1,5 +1,6 @@
 package com.taintech.bittrex.client
 
+import akka.Done
 import akka.actor.ActorSystem
 import akka.http.scaladsl.{Http, HttpExt}
 import akka.stream.ActorMaterializer
@@ -40,7 +41,7 @@ trait MarketApi extends RestApi {
                 quantity: BigDecimal,
                 rate: BigDecimal): Future[OrderUuid]
 
-  def cancel(orderUuid: OrderUuid): Future[OrderUuid]
+  def cancel(orderUuid: OrderUuid): Future[Done]
 
   def openOrders(market: String): Future[List[OpenOrder]]
 
@@ -52,7 +53,7 @@ trait AccountApi extends RestApi {
 
   def getBalance(currency: String): Future[Balance]
 
-  def getAddress(currency: String): Future[CryptoAddress]
+  def getDepositAddress(currency: String): Future[CryptoAddress]
 
   def accountWithdraw(currency: String,
                       quantity: BigDecimal,
@@ -63,9 +64,10 @@ trait AccountApi extends RestApi {
 
   def getOrderHistory(market: Option[String]): Future[List[OrderHistory]]
 
-  def getWithdrawalHistory(currency: Option[String]): Future[List[Withdrawal]]
+  def getWithdrawalHistory(
+      currency: Option[String]): Future[List[WithdrawalHistory]]
 
-  def getDepositHistory(currency: Option[String]): Future[List[Deposit]]
+  def getDepositHistory(currency: Option[String]): Future[List[DepositHistory]]
 
 }
 
