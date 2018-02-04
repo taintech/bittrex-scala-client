@@ -213,9 +213,13 @@ class BittrexClientImpl(http: HttpExt, config: BittrexClientConfig)(
     val url =
       if (params.isEmpty) baseUrl
       else
-        baseUrl + params.map { case (k, v) => s"$k=$v" }.mkString("?", "&", "")
+        baseUrl + params
+          .map { case (k, v) => s"${encode(k)}=${encode(v)}" }
+          .mkString("?", "&", "")
     s"https://$host$url"
   }
+
+  private def encode(s: String) = java.net.URLEncoder.encode(s, "utf-8")
 
   private def signedRequest(baseUrl: String,
                             params: Map[String, String]): Future[HttpResponse] =
