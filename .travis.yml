@@ -1,6 +1,13 @@
+sudo: false
 language: scala
+
 scala:
   - 2.12.4
+jdk:
+  - oraclejdk8
 
 script:
   - sbt clean scalafmtTest coverage "++$TRAVIS_SCALA_VERSION test"
+
+after_success:
+  - sbt ++$TRAVIS_SCALA_VERSION "+++$TRAVIS_SCALA_VERSION coverageReport" coverageAggregate coveralls
