@@ -184,7 +184,9 @@ class BittrexClientSpec
                              resource: String,
                              expectedParams: Map[String, String] =
                                Map.empty[String, String]) =
-    resourceRoute(s"test/public/$url", s"public-api/$resource", expectedParams)
+    resourceRoute(s"$apiPath/public/$url",
+                  s"public-api/$resource",
+                  expectedParams)
 
   val publicApiRoutes: Route = publicApiRoute("getmarkets", "getmarkets.json") ~
     publicApiRoute("getcurrencies", "getcurrencies.json") ~
@@ -239,10 +241,9 @@ object BittrexClientSpec {
   val host = "localhost"
   val testServerPort: Int = 9069
   val bufferSize = 10
-  val rootUrl = "/test"
-  val publicApiUrl = "/test/public"
+  val apiPath = "test"
   val testConf =
-    BittrexClientConfig(host, testServerPort, rootUrl, publicApiUrl, bufferSize)
+    BittrexClientConfig(host, testServerPort, "/" + apiPath, Some(bufferSize), accountKey = None)
 
   val market = Market(
     marketName = "BTC-LTC",

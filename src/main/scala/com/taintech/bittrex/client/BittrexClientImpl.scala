@@ -1,5 +1,8 @@
 package com.taintech.bittrex.client
 
+import javax.crypto.Mac
+import javax.crypto.spec.SecretKeySpec
+
 import akka.actor.ActorSystem
 import akka.http.scaladsl.HttpExt
 import akka.http.scaladsl.model.headers.RawHeader
@@ -13,6 +16,7 @@ import com.taintech.bittrex.client.OrderBookType.OrderBookType
 import com.taintech.bittrex.client.OrderBookType._
 import com.taintech.bittrex.client.codecs.ArgonautSupport
 import com.typesafe.scalalogging.LazyLogging
+import org.bouncycastle.util.encoders.Hex
 
 import scala.collection.immutable
 import scala.concurrent.{ExecutionContextExecutor, Future, Promise}
@@ -34,7 +38,7 @@ class BittrexClientImpl(http: HttpExt, config: BittrexClientConfig)(
     settings = ConnectionPoolSettings(system))
 
   private val queue = Source
-    .queue[(HttpRequest, Promise[HttpResponse])](bufferSize,
+    .queue[(HttpRequest, Promise[HttpResponse])](bufferSize.getOrElse(100),
                                                  OverflowStrategy.dropNew)
     .via(pool)
     .toMat(Sink.foreach({
@@ -44,40 +48,74 @@ class BittrexClientImpl(http: HttpExt, config: BittrexClientConfig)(
     .run
 
   def getMarkets: Future[List[Market]] =
-    get[List[Market]](s"$publicApiUrl/getmarkets")
+    getPublic[List[Market]]("getmarkets")
 
   def getCurrencies: Future[List[CurrencyInfo]] =
-    get[List[CurrencyInfo]](s"$publicApiUrl/getcurrencies")
+    getPublic[List[CurrencyInfo]](s"getcurrencies")
 
   def getTicker(market: String): Future[Ticker] =
-    get[Ticker](s"$publicApiUrl/getticker", Map("market" -> market))
+    getPublic[Ticker]("getticker", Map("market" -> market))
 
   def getMarketSummaries: Future[List[MarketSummary]] =
-    get[List[MarketSummary]](s"$publicApiUrl/getmarketsummaries")
+    getPublic[List[MarketSummary]]("getmarketsummaries")
 
   def getMarketSummary(market: String): Future[List[MarketSummary]] =
-    get[List[MarketSummary]](s"$publicApiUrl/getmarketsummary",
-                             Map("market" -> market))
+    getPublic[List[MarketSummary]]("getmarketsummary", Map("market" -> market))
 
   def getOrderBook(market: String,
                    orderType: OrderBookType): Future[OrderBook] = {
     orderType match {
       case Both =>
-        get[OrderBook](s"$publicApiUrl/getorderbook",
-                       Map("market" -> market, "type" -> orderType.toString))
+        getPublic[OrderBook](
+          "getorderbook",
+          Map("market" -> market, "type" -> orderType.toString))
       case Sell =>
-        get[List[Order]](s"$publicApiUrl/getorderbook",
-                         Map("market" -> market, "type" -> orderType.toString))
+        getPublic[List[Order]](
+          "getorderbook",
+          Map("market" -> market, "type" -> orderType.toString))
           .map(OrderBook(List.empty, _))
       case Buy =>
-        get[List[Order]](s"$publicApiUrl/getorderbook",
-                         Map("market" -> market, "type" -> orderType.toString))
+        getPublic[List[Order]](
+          "getorderbook",
+          Map("market" -> market, "type" -> orderType.toString))
           .map(OrderBook(_, List.empty))
     }
   }
 
   def getMarketHistory(market: String): Future[List[Trade]] =
-    get[List[Trade]](s"$publicApiUrl/getmarkethistory", Map("market" -> market))
+    getPublic[List[Trade]]("getmarkethistory", Map("market" -> market))
+
+  override def buyLimit(market: String,
+                        quantity: BigDecimal,
+                        rate: BigDecimal): Future[OrderUuid] =
+    queryMarket[OrderUuid]("buylimit",
+                           Map(
+                             "market" -> market,
+                             "quantity" -> quantity.toString(),
+                             "rate" -> rate.toString()
+                           ))
+
+  override def sellLimit(market: String,
+                         quantity: BigDecimal,
+                         rate: BigDecimal): Future[OrderUuid] =
+    queryMarket[OrderUuid]("selllimit",
+                           Map(
+                             "market" -> market,
+                             "quantity" -> quantity.toString(),
+                             "rate" -> rate.toString()
+                           ))
+
+  override def cancel(orderUuid: OrderUuid): Future[OrderUuid] =
+    queryMarket[OrderUuid]("cancel",
+                           Map(
+                             "uuid" -> orderUuid.toString
+                           ))
+
+  override def openOrders(market: String): Future[List[OpenOrder]] =
+    queryMarket[List[OpenOrder]]("cancel",
+                                 Map(
+                                   "market" -> market
+                                 ))
 
   override def getBalances: Future[List[Balance]] = ???
 
@@ -102,38 +140,22 @@ class BittrexClientImpl(http: HttpExt, config: BittrexClientConfig)(
   override def getDepositHistory(
       currency: Option[String]): Future[List[Deposit]] = ???
 
-  override def buyLimit(market: String,
-                        quantity: BigDecimal,
-                        rate: BigDecimal): Future[OrderUuid] = ???
+  private def getPublic[T](method: String,
+                           params: Map[String, String] = Map.empty)(
+      implicit decodeJson: DecodeJson[BittrexResponse[T]]) =
+    get[T](s"$apiPath/public/$method", params, signed = false)
 
-  override def sellLimit(market: String,
-                         quantity: BigDecimal,
-                         rate: BigDecimal): Future[OrderUuid] = ???
+  private def queryMarket[T](method: String, params: Map[String, String])(
+      implicit decodeJson: DecodeJson[BittrexResponse[T]]) =
+    get[T](s"$apiPath/market/$method", params, signed = true)
 
-  override def cancel(orderUuid: OrderUuid): Future[OrderUuid] = ???
-
-  override def openOrders(market: String): Future[List[OpenOrder]] = ???
-
-  def apiKey: String = ???
-
-  def apiSign(requestUrl: String): String = ???
-
-  private def buildUrl(baseUrl: String, params: Map[String, String]): String = {
-    val url =
-      if (params.isEmpty) baseUrl
-      else
-        baseUrl + params.map { case (k, v) => s"$k=$v" }.mkString("?", "&", "")
-    s"https://$host:$port$url"
-  }
-
-  private def signedRequest(
-      baseUrl: String,
-      params: Map[String, String]): Future[HttpResponse] = {
-    val apiKeyParams =
-      Map("apiKey" -> apiKey, "nonce" -> System.currentTimeMillis().toString)
-    val url = buildUrl(baseUrl, apiKeyParams ++ params)
-    val apiSignHeader = List(RawHeader("apisign", apiSign(url)))
-    performHttpGet(url, apiSignHeader)
+  private def get[T](url: String, params: Map[String, String], signed: Boolean)(
+      implicit decodeJson: DecodeJson[BittrexResponse[T]]): Future[T] = {
+    val httpResponse =
+      if (signed) signedRequest(url, params)
+      else performHttpGet(buildUrl(url, params))
+    val response = unmarshal[BittrexResponse[T]](httpResponse)
+    handleResponse(response)
   }
 
   private def performHttpGet(url: String,
@@ -159,21 +181,35 @@ class BittrexClientImpl(http: HttpExt, config: BittrexClientConfig)(
     case _ => sys.error(s"Unexpected Bittrex response!")
   }
 
-  private def get[T](url: String,
-                     params: Map[String, String] = Map.empty,
-                     signed: Boolean = false)(
-      implicit decodeJson: DecodeJson[BittrexResponse[T]]): Future[T] = {
-    val httpResponse =
-      if (signed) signedRequest(url, params)
-      else performHttpGet(buildUrl(url, params))
-    val response = unmarshal[BittrexResponse[T]](httpResponse)
-    handleResponse(response)
+  private def buildUrl(baseUrl: String, params: Map[String, String]): String = {
+    val url =
+      if (params.isEmpty) baseUrl
+      else
+        baseUrl + params.map { case (k, v) => s"$k=$v" }.mkString("?", "&", "")
+    s"https://$host:$port$url"
   }
 
-}
+  private def apiSign(url: String, apiSecret: String) = {
+    val keyBytes = apiSecret.getBytes("UTF-8")
+    val HMAC_SHA256 = "HmacSHA512"
+    val sha512_HMAC = Mac.getInstance(HMAC_SHA256)
+    val keySpec = new SecretKeySpec(keyBytes, HMAC_SHA256)
+    sha512_HMAC.init(keySpec)
+    val dataBytes = sha512_HMAC.doFinal(url.getBytes("UTF-8"))
+    Hex.toHexString(dataBytes)
+  }
 
-case class BittrexClientConfig(host: String,
-                               port: Int,
-                               rootUrl: String,
-                               publicApiUrl: String,
-                               bufferSize: Int)
+  private def signedRequest(baseUrl: String,
+                            params: Map[String, String]): Future[HttpResponse] =
+    accountKey match {
+      case None => Future.failed(sys.error("No account key in configurations!"))
+      case Some(AccountKey(apiKey, apiSecret)) =>
+        val apiKeyParams =
+          Map("apiKey" -> apiKey,
+              "nonce" -> System.currentTimeMillis().toString)
+        val url = buildUrl(baseUrl, apiKeyParams ++ params)
+        val apiSignHeader = List(RawHeader("apisign", apiSign(url, apiSecret)))
+        performHttpGet(url, apiSignHeader)
+    }
+
+}

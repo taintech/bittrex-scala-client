@@ -86,8 +86,11 @@ object BittrexClient {
   def apply()(implicit system: ActorSystem,
               materializer: ActorMaterializer,
               executionContext: ExecutionContextExecutor): BittrexClient =
-    apply(pureconfig
-      .loadConfig[BittrexClientConfig](ConfigFactory.load())
-      .fold(err => sys.error(s"Failed to load configurations $err"), identity))
+    apply(
+      pureconfig
+        .loadConfig[DefaultAppConfig](ConfigFactory.load())
+        .fold(err =>
+                sys.error(s"Failed to load default app configurations $err"),
+              _.bittrexClient))
 
 }
