@@ -122,44 +122,47 @@ class BittrexClientImpl(http: HttpExt, config: BittrexClientConfig)(
 
   override def getBalance(currency: String): Future[Balance] =
     queryAccount[Balance]("getbalance",
-      Map(
-        "currency" -> currency
-      ))
+                          Map(
+                            "currency" -> currency
+                          ))
 
   override def getAddress(currency: String): Future[CryptoAddress] =
     queryAccount[CryptoAddress]("getdepositaddress",
-      Map(
-        "currency" -> currency
-      ))
+                                Map(
+                                  "currency" -> currency
+                                ))
 
   override def accountWithdraw(currency: String,
                                quantity: BigDecimal,
                                address: String,
                                paymentId: Option[String]): Future[OrderUuid] =
     queryAccount[OrderUuid]("withdraw",
-      Map(
-        "currency" -> currency,
-        "quantity" -> quantity.toString(),
-        "address" -> address
-      ) ++ paymentId.map(("paymentid", _)).toMap)
+                            Map(
+                              "currency" -> currency,
+                              "quantity" -> quantity.toString(),
+                              "address" -> address
+                            ) ++ paymentId.map(("paymentid", _)).toMap)
 
   override def getOrder(orderUuid: OrderUuid): Future[ClosedOrder] =
     queryAccount[ClosedOrder]("getorder",
-      Map(
-        "uuid" -> orderUuid.value
-      ))
+                              Map(
+                                "uuid" -> orderUuid.value
+                              ))
 
   override def getOrderHistory(
       market: Option[String]): Future[List[OrderHistory]] =
-    queryAccount[List[OrderHistory]]("getorderhistory", market.map(("market", _)).toMap)
+    queryAccount[List[OrderHistory]]("getorderhistory",
+                                     market.map(("market", _)).toMap)
 
   override def getWithdrawalHistory(
       currency: Option[String]): Future[List[Withdrawal]] =
-    queryAccount[List[Withdrawal]]("getwithdrawalhistory", currency.map(("currency", _)).toMap)
+    queryAccount[List[Withdrawal]]("getwithdrawalhistory",
+                                   currency.map(("currency", _)).toMap)
 
   override def getDepositHistory(
       currency: Option[String]): Future[List[Deposit]] =
-    queryAccount[List[Deposit]]("getdeposithistory", currency.map(("currency", _)).toMap)
+    queryAccount[List[Deposit]]("getdeposithistory",
+                                currency.map(("currency", _)).toMap)
 
   private def getPublic[T](method: String,
                            params: Map[String, String] = Map.empty)(
@@ -170,8 +173,9 @@ class BittrexClientImpl(http: HttpExt, config: BittrexClientConfig)(
       implicit decodeJson: DecodeJson[BittrexResponse[T]]) =
     get[T](s"$apiPath/market/$method", params, signed = true)
 
-  private def queryAccount[T](method: String, params: Map[String, String] = Map.empty)(
-    implicit decodeJson: DecodeJson[BittrexResponse[T]]) =
+  private def queryAccount[T](method: String,
+                              params: Map[String, String] = Map.empty)(
+      implicit decodeJson: DecodeJson[BittrexResponse[T]]) =
     get[T](s"$apiPath/account/$method", params, signed = true)
 
   private def get[T](url: String, params: Map[String, String], signed: Boolean)(
@@ -186,7 +190,8 @@ class BittrexClientImpl(http: HttpExt, config: BittrexClientConfig)(
   private def performHttpGet(url: String,
                              headers: immutable.Seq[HttpHeader] = Nil) = {
     val promisedResponse = Promise[HttpResponse]
-    logger.debug(s"Performing get request using port $port to url: $url with headers $headers")
+    logger.debug(
+      s"Performing get request using port $port to url: $url with headers $headers")
     queue
       .offer(HttpRequest(uri = url, headers = headers) -> promisedResponse)
       .flatMap(_ => promisedResponse.future)
