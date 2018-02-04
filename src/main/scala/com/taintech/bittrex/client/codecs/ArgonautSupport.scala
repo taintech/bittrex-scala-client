@@ -1,4 +1,4 @@
-package com.taintech.bittrex.client
+package com.taintech.bittrex.client.codecs
 
 import akka.http.scaladsl.marshalling.{Marshaller, ToEntityMarshaller}
 import akka.http.scaladsl.model.ContentTypeRange
@@ -7,6 +7,7 @@ import akka.http.scaladsl.unmarshalling.{FromEntityUnmarshaller, Unmarshaller}
 import akka.util.ByteString
 import argonaut.Argonaut._
 import argonaut._
+import com.taintech.bittrex.client._
 
 import scala.collection.immutable.Seq
 

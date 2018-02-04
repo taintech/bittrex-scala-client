@@ -38,6 +38,7 @@ object Main extends App with LazyLogging {
   logger.info(s"Bittrex client started\nPress RETURN to stop...")
   StdIn.readLine()
   cancellable.cancel()
+  system.terminate()
   Thread.sleep(100)
   logger.info(s"Stopping application.")
   System.exit(0)
