@@ -8,7 +8,7 @@ licenses := Seq(
   "MIT" -> url(
     "https://github.com/taintech/bittrex-scala-client/blob/master/LICENSE"))
 
-version := "0.1"
+version := "0.2"
 
 scalaVersion := "2.12.4"
 
@@ -36,7 +36,9 @@ developers := List(
             email = "rinattainov@gmail.com.com",
             url = new URL(s"http://github.com/taintech"))
 )
-
+scmInfo := Some(
+  ScmInfo(url(s"https://github.com/taintech/bittrex-scala-client"),
+          s"git@github.com:taintech/bittrex-scala-client.git"))
 releasePublishArtifactsAction := PgpKeys.publishSigned.value
 publishMavenStyle := true
 publishArtifact in Test := false
