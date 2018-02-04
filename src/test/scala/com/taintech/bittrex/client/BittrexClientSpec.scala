@@ -243,7 +243,11 @@ object BittrexClientSpec {
   val bufferSize = 10
   val apiPath = "test"
   val testConf =
-    BittrexClientConfig(host, testServerPort, "/" + apiPath, Some(bufferSize), accountKey = None)
+    BittrexClientConfig(host,
+                        testServerPort,
+                        "/" + apiPath,
+                        Some(bufferSize),
+                        accountKey = None)
 
   val market = Market(
     marketName = "BTC-LTC",
