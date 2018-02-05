@@ -2,13 +2,7 @@ name := "bittrex-client"
 
 organization := "com.github.taintech"
 
-homepage := Some(url("https://github.com/taintech/bittrex-scala-client"))
-
-licenses := Seq(
-  "MIT" -> url(
-    "https://github.com/taintech/bittrex-scala-client/blob/master/LICENSE"))
-
-version := "0.2"
+version := "0.3-SNAPSHOT"
 
 scalaVersion := "2.12.4"
 
@@ -30,15 +24,22 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "3.0.4" % Test
 )
 
+val username = "taintech"
+val repo = "bittrex-scala-client"
+val usernameRepo = s"$username/$repo"
+
+homepage := Some(url(s"https://github.com/$usernameRepo"))
+
 developers := List(
-  Developer(id = "taintech",
+  Developer(id = username,
             name = "Rinat Tainov",
             email = "rinattainov@gmail.com.com",
-            url = new URL(s"http://github.com/taintech"))
+            url = new URL(s"http://github.com/$username"))
 )
+
 scmInfo := Some(
-  ScmInfo(url(s"https://github.com/taintech/bittrex-scala-client"),
-          s"git@github.com:taintech/bittrex-scala-client.git"))
+  ScmInfo(url(s"https://github.com/$usernameRepo"),
+          s"git@github.com:$usernameRepo.git"))
 releasePublishArtifactsAction := PgpKeys.publishSigned.value
 publishMavenStyle := true
 publishArtifact in Test := false
@@ -54,3 +55,7 @@ credentials ++= (for {
               "oss.sonatype.org",
               username,
               password)).toSeq
+
+licenses := Seq(
+  "MIT" -> url(
+    s"https://github.com/$usernameRepo/blob/master/LICENSE"))
