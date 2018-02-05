@@ -57,5 +57,4 @@ credentials ++= (for {
               password)).toSeq
 
 licenses := Seq(
-  "MIT" -> url(
-    s"https://github.com/$usernameRepo/blob/master/LICENSE"))
+  "MIT" -> url(s"https://github.com/$usernameRepo/blob/master/LICENSE"))
