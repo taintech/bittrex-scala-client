@@ -1,6 +1,6 @@
 package com.taintech.bittrex.client.crypto
 
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.{ Matchers, WordSpec }
 
 class SignProviderSpec extends WordSpec with Matchers with SignProvider {
 

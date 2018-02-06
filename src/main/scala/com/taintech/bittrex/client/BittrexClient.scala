@@ -2,12 +2,12 @@ package com.taintech.bittrex.client
 
 import akka.Done
 import akka.actor.ActorSystem
-import akka.http.scaladsl.{Http, HttpExt}
+import akka.http.scaladsl.{ Http, HttpExt }
 import akka.stream.ActorMaterializer
 import com.taintech.bittrex.client.OrderBookType.OrderBookType
 import com.typesafe.config.ConfigFactory
 
-import scala.concurrent.{ExecutionContextExecutor, Future}
+import scala.concurrent.{ ExecutionContextExecutor, Future }
 
 trait BittrexClient extends PublicApi with MarketApi with AccountApi
 
@@ -33,13 +33,9 @@ trait PublicApi extends RestApi {
 
 trait MarketApi extends RestApi {
 
-  def buyLimit(market: String,
-               quantity: BigDecimal,
-               rate: BigDecimal): Future[OrderUuid]
+  def buyLimit(market: String, quantity: BigDecimal, rate: BigDecimal): Future[OrderUuid]
 
-  def sellLimit(market: String,
-                quantity: BigDecimal,
-                rate: BigDecimal): Future[OrderUuid]
+  def sellLimit(market: String, quantity: BigDecimal, rate: BigDecimal): Future[OrderUuid]
 
   def cancel(orderUuid: OrderUuid): Future[Done]
 
@@ -64,8 +60,7 @@ trait AccountApi extends RestApi {
 
   def getOrderHistory(market: Option[String]): Future[List[OrderHistory]]
 
-  def getWithdrawalHistory(
-      currency: Option[String]): Future[List[WithdrawalHistory]]
+  def getWithdrawalHistory(currency: Option[String]): Future[List[WithdrawalHistory]]
 
   def getDepositHistory(currency: Option[String]): Future[List[DepositHistory]]
 
@@ -73,16 +68,14 @@ trait AccountApi extends RestApi {
 
 object BittrexClient {
 
-  def apply(http: HttpExt, config: BittrexClientConfig)(
-      implicit system: ActorSystem,
-      materializer: ActorMaterializer,
-      executionContext: ExecutionContextExecutor): BittrexClient =
+  def apply(http: HttpExt, config: BittrexClientConfig)(implicit system: ActorSystem,
+                                                        materializer: ActorMaterializer,
+                                                        executionContext: ExecutionContextExecutor): BittrexClient =
     new BittrexClientImpl(http, config)
 
-  def apply(bittrexClientConfig: BittrexClientConfig)(
-      implicit system: ActorSystem,
-      materializer: ActorMaterializer,
-      executionContext: ExecutionContextExecutor): BittrexClient =
+  def apply(bittrexClientConfig: BittrexClientConfig)(implicit system: ActorSystem,
+                                                      materializer: ActorMaterializer,
+                                                      executionContext: ExecutionContextExecutor): BittrexClient =
     apply(Http(), bittrexClientConfig)
 
   def apply()(implicit system: ActorSystem,
@@ -91,8 +84,7 @@ object BittrexClient {
     apply(
       pureconfig
         .loadConfig[DefaultAppConfig](ConfigFactory.load())
-        .fold(err =>
-                sys.error(s"Failed to load default app configurations $err"),
-              _.bittrexClient))
+        .fold(err => sys.error(s"Failed to load default app configurations $err"), _.bittrexClient)
+    )
 
 }

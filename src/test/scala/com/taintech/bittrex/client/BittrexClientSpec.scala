@@ -2,34 +2,24 @@ package com.taintech.bittrex.client
 
 import akka.Done
 import akka.http.scaladsl.model.HttpEntity.ChunkStreamPart
-import akka.http.scaladsl.model.{
-  ContentTypes,
-  HttpEntity,
-  HttpResponse,
-  StatusCodes
-}
+import akka.http.scaladsl.model.{ ContentTypes, HttpEntity, HttpResponse, StatusCodes }
 import akka.http.scaladsl.server.Directives._
-import akka.http.scaladsl.server.{PathMatchers, Route}
+import akka.http.scaladsl.server.{ PathMatchers, Route }
 import akka.stream.scaladsl.StreamConverters
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.time.{Millis, Seconds, Span}
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.time.{ Millis, Seconds, Span }
+import org.scalatest.{ Matchers, WordSpec }
 
 import scala.language.postfixOps
 
-class BittrexClientSpec
-    extends WordSpec
-    with Matchers
-    with ScalaFutures
-    with BittrexHTTPSTestServer {
+class BittrexClientSpec extends WordSpec with Matchers with ScalaFutures with BittrexHTTPSTestServer {
 
   import BittrexClientSpec._
 
   val testClient = BittrexClient(testConf)
 
   implicit override val patienceConfig: PatienceConfig =
-    PatienceConfig(timeout = scaled(Span(2, Seconds)),
-                   interval = scaled(Span(5, Millis)))
+    PatienceConfig(timeout = scaled(Span(2, Seconds)), interval = scaled(Span(5, Millis)))
 
   "BittrexClient" should {
     "return markets" in {
@@ -88,49 +78,44 @@ class BittrexClientSpec
       }
     }
     "return both types of order book for Litecoin" in {
-      whenReady(testClient.getOrderBook("BTC-LTC", OrderBookType.Both)) {
-        result =>
-          result.buyOrders should not be empty
-          result.sellOrders should not be empty
-          result.buyOrders should have size 100
-          result.sellOrders should have size 100
-          result.buyOrders should contain(litecoinBuyOrder)
-          result.sellOrders should contain(litecoinSellOrder)
+      whenReady(testClient.getOrderBook("BTC-LTC", OrderBookType.Both)) { result =>
+        result.buyOrders should not be empty
+        result.sellOrders should not be empty
+        result.buyOrders should have size 100
+        result.sellOrders should have size 100
+        result.buyOrders should contain(litecoinBuyOrder)
+        result.sellOrders should contain(litecoinSellOrder)
       }
     }
     "return sell order book for Litecoin" in {
-      whenReady(testClient.getOrderBook("BTC-LTC", OrderBookType.Sell)) {
-        result =>
-          result.buyOrders should be(List.empty)
-          result.sellOrders should not be empty
-          result.sellOrders should have size 500
-          result.sellOrders should contain(litecoinSellOrder)
+      whenReady(testClient.getOrderBook("BTC-LTC", OrderBookType.Sell)) { result =>
+        result.buyOrders should be(List.empty)
+        result.sellOrders should not be empty
+        result.sellOrders should have size 500
+        result.sellOrders should contain(litecoinSellOrder)
       }
     }
     "return buy order book for Litecoin" in {
-      whenReady(testClient.getOrderBook("BTC-LTC", OrderBookType.Buy)) {
-        result =>
-          result.buyOrders should not be empty
-          result.sellOrders should be(List.empty)
-          result.buyOrders should have size 500
-          result.buyOrders should contain(litecoinBuyOrder)
+      whenReady(testClient.getOrderBook("BTC-LTC", OrderBookType.Buy)) { result =>
+        result.buyOrders should not be empty
+        result.sellOrders should be(List.empty)
+        result.buyOrders should have size 500
+        result.buyOrders should contain(litecoinBuyOrder)
       }
     }
     "return both types of order book for Ethereum" in {
-      whenReady(testClient.getOrderBook("BTC-ETH", OrderBookType.Both)) {
-        result =>
-          result.buyOrders should not be empty
-          result.sellOrders should not be empty
-          result.buyOrders should have size 100
-          result.sellOrders should have size 100
-          result.buyOrders should contain(ethereumBuyOrder)
-          result.sellOrders should contain(ethereumSellOrder)
+      whenReady(testClient.getOrderBook("BTC-ETH", OrderBookType.Both)) { result =>
+        result.buyOrders should not be empty
+        result.sellOrders should not be empty
+        result.buyOrders should have size 100
+        result.sellOrders should have size 100
+        result.buyOrders should contain(ethereumBuyOrder)
+        result.sellOrders should contain(ethereumSellOrder)
       }
     }
     "return failed exception for bla order book" in {
-      whenReady(testClient.getOrderBook("bla-bla", OrderBookType.Both).failed) {
-        exception =>
-          exception.getMessage should include("INVALID_MARKET")
+      whenReady(testClient.getOrderBook("bla-bla", OrderBookType.Both).failed) { exception =>
+        exception.getMessage should include("INVALID_MARKET")
       }
     }
     "return market history for Litecoin" in {
@@ -192,12 +177,9 @@ class BittrexClientSpec
       }
     }
     "withdraw Bitcoins from account" in {
-      whenReady(
-        testClient.accountWithdraw("BTC",
-                                   69.69,
-                                   "Vy5SKeKGXUHKS2WVpJ76HYuKAu3URastUo",
-                                   Some("test-payment-id"))) { result =>
-        result should be(testOrderUuid)
+      whenReady(testClient.accountWithdraw("BTC", 69.69, "Vy5SKeKGXUHKS2WVpJ76HYuKAu3URastUo", Some("test-payment-id"))) {
+        result =>
+          result should be(testOrderUuid)
       }
     }
     "get account open order" in {
@@ -230,11 +212,9 @@ class BittrexClientSpec
   }
 
   override val hostname: String = host
-  override val port: Int = testServerPort
+  override val port: Int        = testServerPort
 
-  private def resourceRoute(url: String,
-                            resource: String,
-                            expectedParams: Map[String, String]) =
+  private def resourceRoute(url: String, resource: String, expectedParams: Map[String, String]) =
     (get & path(PathMatchers.separateOnSlashes(url))) {
       parameterMap { params =>
         if (params == expectedParams) {
@@ -245,187 +225,159 @@ class BittrexClientSpec
               entity = HttpEntity.Chunked(
                 contentType = ContentTypes.`application/json`,
                 chunks = StreamConverters
-                  .fromInputStream(() =>
-                    getClass.getClassLoader.getResourceAsStream(resource))
+                  .fromInputStream(() => getClass.getClassLoader.getResourceAsStream(resource))
                   .map(ChunkStreamPart.apply)
               )
-            ))
+            )
+          )
         } else reject
       }
     } ~ reject
 
-  private def resourceRouteWithApiSign(url: String,
-                                       resource: String,
-                                       expectedParams: Map[String, String]) =
+  private def resourceRouteWithApiSign(url: String, resource: String, expectedParams: Map[String, String]) =
     headerValueByName("apisign") { _ =>
       parameterMap { params =>
-        resourceRoute(url,
-                      resource,
-                      expectedParams ++ params.filterKeys(_ == "nonce") ++ Map(
-                        "apiKey" -> apiKey))
+        resourceRoute(url, resource, expectedParams ++ params.filterKeys(_ == "nonce") ++ Map("apiKey" -> apiKey))
       }
     } ~ reject
 
   private def publicApiRoute(url: String,
                              resource: String,
-                             expectedParams: Map[String, String] =
-                               Map.empty[String, String]) =
-    resourceRoute(s"$apiPath/public/$url",
-                  s"public-api/$resource",
-                  expectedParams)
+                             expectedParams: Map[String, String] = Map.empty[String, String]) =
+    resourceRoute(s"$apiPath/public/$url", s"public-api/$resource", expectedParams)
 
   private def marketApiRoute(url: String,
                              resource: String,
-                             expectedParams: Map[String, String] =
-                               Map.empty[String, String]) =
-    resourceRouteWithApiSign(s"$apiPath/market/$url",
-                             s"market-api/$resource",
-                             expectedParams)
+                             expectedParams: Map[String, String] = Map.empty[String, String]) =
+    resourceRouteWithApiSign(s"$apiPath/market/$url", s"market-api/$resource", expectedParams)
 
   private def accountApiRoute(url: String,
                               resource: String,
-                              expectedParams: Map[String, String] =
-                                Map.empty[String, String]) =
-    resourceRouteWithApiSign(s"$apiPath/account/$url",
-                             s"account-api/$resource",
-                             expectedParams)
+                              expectedParams: Map[String, String] = Map.empty[String, String]) =
+    resourceRouteWithApiSign(s"$apiPath/account/$url", s"account-api/$resource", expectedParams)
 
   val publicApiRoutes: Route = publicApiRoute("getmarkets", "getmarkets.json") ~
     publicApiRoute("getcurrencies", "getcurrencies.json") ~
     publicApiRoute("getmarketsummaries", "getmarketsummaries.json") ~
-    publicApiRoute("getticker",
-                   "getticker-btc-ltc.json",
-                   Map("market" -> "BTC-LTC")) ~
-    publicApiRoute("getticker",
-                   "getticker-btc-eth.json",
-                   Map("market" -> "BTC-ETH")) ~
-    publicApiRoute("getticker",
-                   "getticker-bla-bla.json",
-                   Map("market" -> "bla-bla")) ~
-    publicApiRoute("getmarketsummary",
-                   "getmarketsummary-btc-ltc.json",
-                   Map("market" -> "BTC-LTC")) ~
-    publicApiRoute("getmarketsummary",
-                   "getmarketsummary-btc-eth.json",
-                   Map("market" -> "BTC-ETH")) ~
-    publicApiRoute("getmarketsummary",
-                   "getmarketsummary-bla-bla.json",
-                   Map("market" -> "bla-bla")) ~
-    publicApiRoute("getorderbook",
-                   "getorderbook-btc-ltc-both.json",
-                   Map("market" -> "BTC-LTC", "type" -> "both")) ~
-    publicApiRoute("getorderbook",
-                   "getorderbook-btc-ltc-sell.json",
-                   Map("market" -> "BTC-LTC", "type" -> "sell")) ~
-    publicApiRoute("getorderbook",
-                   "getorderbook-btc-ltc-buy.json",
-                   Map("market" -> "BTC-LTC", "type" -> "buy")) ~
-    publicApiRoute("getorderbook",
-                   "getorderbook-btc-eth-both.json",
-                   Map("market" -> "BTC-ETH", "type" -> "both")) ~
-    publicApiRoute("getorderbook",
-                   "getorderbook-bla-bla-both.json",
-                   Map("market" -> "bla-bla", "type" -> "both")) ~
-    publicApiRoute("getmarkethistory",
-                   "getmarkethistory-btc-ltc.json",
-                   Map("market" -> "BTC-LTC")) ~
-    publicApiRoute("getmarkethistory",
-                   "getmarkethistory-btc-eth.json",
-                   Map("market" -> "BTC-ETH")) ~
-    publicApiRoute("getmarkethistory",
-                   "getmarkethistory-bla-bla.json",
-                   Map("market" -> "bla-bla"))
+    publicApiRoute("getticker", "getticker-btc-ltc.json", Map("market"               -> "BTC-LTC")) ~
+    publicApiRoute("getticker", "getticker-btc-eth.json", Map("market"               -> "BTC-ETH")) ~
+    publicApiRoute("getticker", "getticker-bla-bla.json", Map("market"               -> "bla-bla")) ~
+    publicApiRoute("getmarketsummary", "getmarketsummary-btc-ltc.json", Map("market" -> "BTC-LTC")) ~
+    publicApiRoute("getmarketsummary", "getmarketsummary-btc-eth.json", Map("market" -> "BTC-ETH")) ~
+    publicApiRoute("getmarketsummary", "getmarketsummary-bla-bla.json", Map("market" -> "bla-bla")) ~
+    publicApiRoute("getorderbook", "getorderbook-btc-ltc-both.json", Map("market"    -> "BTC-LTC", "type" -> "both")) ~
+    publicApiRoute("getorderbook", "getorderbook-btc-ltc-sell.json", Map("market"    -> "BTC-LTC", "type" -> "sell")) ~
+    publicApiRoute("getorderbook", "getorderbook-btc-ltc-buy.json", Map("market"     -> "BTC-LTC", "type" -> "buy")) ~
+    publicApiRoute("getorderbook", "getorderbook-btc-eth-both.json", Map("market"    -> "BTC-ETH", "type" -> "both")) ~
+    publicApiRoute("getorderbook", "getorderbook-bla-bla-both.json", Map("market"    -> "bla-bla", "type" -> "both")) ~
+    publicApiRoute("getmarkethistory", "getmarkethistory-btc-ltc.json", Map("market" -> "BTC-LTC")) ~
+    publicApiRoute("getmarkethistory", "getmarkethistory-btc-eth.json", Map("market" -> "BTC-ETH")) ~
+    publicApiRoute("getmarkethistory", "getmarkethistory-bla-bla.json", Map("market" -> "bla-bla"))
 
-  protected val marketApiRoutes: Route = marketApiRoute("buylimit",
-                                                        "buylimit.json",
-                                                        Map(
-                                                          "market" -> "BTC-LTC",
-                                                          "quantity" -> "69.69",
-                                                          "rate" -> "96.96"
-                                                        )) ~ marketApiRoute(
+  protected val marketApiRoutes: Route = marketApiRoute(
+    "buylimit",
+    "buylimit.json",
+    Map(
+      "market"   -> "BTC-LTC",
+      "quantity" -> "69.69",
+      "rate"     -> "96.96"
+    )
+  ) ~ marketApiRoute(
     "selllimit",
     "selllimit.json",
     Map(
-      "market" -> "BTC-LTC",
+      "market"   -> "BTC-LTC",
       "quantity" -> "96.96",
-      "rate" -> "69.69"
-    )) ~ marketApiRoute("cancel",
-                        "cancel.json",
-                        Map(
-                          "uuid" -> "e606d53c-8d70-11e3-94b5-425861b86ab6",
-                        )) ~ marketApiRoute("getopenorders",
-                                            "getopenorders.json",
-                                            Map(
-                                              "market" -> "BTC-LTC",
-                                            ))
+      "rate"     -> "69.69"
+    )
+  ) ~ marketApiRoute(
+    "cancel",
+    "cancel.json",
+    Map(
+      "uuid" -> "e606d53c-8d70-11e3-94b5-425861b86ab6",
+    )
+  ) ~ marketApiRoute(
+    "getopenorders",
+    "getopenorders.json",
+    Map(
+      "market" -> "BTC-LTC",
+    )
+  )
 
-  protected val accountApiRoutes: Route = accountApiRoute("getbalances",
-                                                          "getbalances.json") ~
-    accountApiRoute("getbalance",
-                    "getbalance.json",
-                    Map(
-                      "currency" -> "BTC"
-                    )) ~ accountApiRoute("getbalance",
-                                         "getbalance.json",
-                                         Map(
-                                           "currency" -> "BTC"
-                                         )) ~ accountApiRoute(
+  protected val accountApiRoutes: Route = accountApiRoute("getbalances", "getbalances.json") ~
+    accountApiRoute(
+      "getbalance",
+      "getbalance.json",
+      Map(
+        "currency" -> "BTC"
+      )
+    ) ~ accountApiRoute(
+    "getbalance",
+    "getbalance.json",
+    Map(
+      "currency" -> "BTC"
+    )
+  ) ~ accountApiRoute(
     "getdepositaddress",
     "getdepositaddress.json",
     Map(
       "currency" -> "BTC"
-    )) ~ accountApiRoute("withdraw",
-                         "withdraw.json",
-                         Map(
-                           "currency" -> "BTC",
-                           "quantity" -> "69.69",
-                           "address" -> "Vy5SKeKGXUHKS2WVpJ76HYuKAu3URastUo",
-                           "paymentid" -> "test-payment-id"
-                         )) ~ accountApiRoute(
+    )
+  ) ~ accountApiRoute(
+    "withdraw",
+    "withdraw.json",
+    Map(
+      "currency"  -> "BTC",
+      "quantity"  -> "69.69",
+      "address"   -> "Vy5SKeKGXUHKS2WVpJ76HYuKAu3URastUo",
+      "paymentid" -> "test-payment-id"
+    )
+  ) ~ accountApiRoute(
     "getorder",
     "getorder.json",
     Map(
       "uuid" -> "e606d53c-8d70-11e3-94b5-425861b86ab6"
-    )) ~ accountApiRoute("getorderhistory",
-                         "getorderhistory.json",
-                         Map(
-                           "market" -> "BTC-LTC"
-                         )) ~ accountApiRoute("getwithdrawalhistory",
-                                              "getwithdrawalhistory.json",
-                                              Map(
-                                                "currency" -> "BTC"
-                                              )) ~ accountApiRoute(
+    )
+  ) ~ accountApiRoute(
+    "getorderhistory",
+    "getorderhistory.json",
+    Map(
+      "market" -> "BTC-LTC"
+    )
+  ) ~ accountApiRoute(
+    "getwithdrawalhistory",
+    "getwithdrawalhistory.json",
+    Map(
+      "currency" -> "BTC"
+    )
+  ) ~ accountApiRoute(
     "getdeposithistory",
     "getdeposithistory.json",
     Map(
       "currency" -> "BTC"
-    ))
+    )
+  )
 
 }
 
 object BittrexClientSpec {
 
-  val host = "localhost"
+  val host                = "localhost"
   val testServerPort: Int = 9069
-  val bufferSize = 10
-  val apiPath = "test"
-  val apiKey = "just4test-key"
-  val apiSecret = "just4test-secret"
-  val accountKey = AccountKey(apiKey, apiSecret)
+  val bufferSize          = 10
+  val apiPath             = "test"
+  val apiKey              = "just4test-key"
+  val apiSecret           = "just4test-secret"
+  val accountKey          = AccountKey(apiKey, apiSecret)
   val testConf =
-    BittrexClientConfig(host,
-                        testServerPort,
-                        "/" + apiPath,
-                        Some(bufferSize),
-                        Some(accountKey))
+    BittrexClientConfig(host, testServerPort, "/" + apiPath, Some(bufferSize), Some(accountKey))
 
   val market = Market(
     marketName = "BTC-LTC",
     minTradeSize = 0.01469482,
     marketCurrency = "LTC",
     baseCurrencyLong = "Bitcoin",
-    logoUrl = Some(
-      "https://bittrexblobstorage.blob.core.windows.net/public/6defbc41-582d-47a6-bb2e-d0fa88663524.png"),
+    logoUrl = Some("https://bittrexblobstorage.blob.core.windows.net/public/6defbc41-582d-47a6-bb2e-d0fa88663524.png"),
     marketCurrencyLong = "Litecoin",
     baseCurrency = "BTC",
     notice = None,
@@ -516,20 +468,8 @@ object BittrexClientSpec {
 
   val ethereumSellOrder = Order(0.08134966, 0.1104)
 
-  val litecoinTrade = Trade(141567635,
-                            "2018-01-31T18:05:50.923",
-                            0.78722469,
-                            0.016038,
-                            0.0126255,
-                            "FILL",
-                            "BUY")
-  val ethereumTrade = Trade(206517064,
-                            "2018-01-31T18:06:23.343",
-                            0.05475369,
-                            0.11037015,
-                            0.00604317,
-                            "FILL",
-                            "BUY")
+  val litecoinTrade = Trade(141567635, "2018-01-31T18:05:50.923", 0.78722469, 0.016038, 0.0126255, "FILL", "BUY")
+  val ethereumTrade = Trade(206517064, "2018-01-31T18:06:23.343", 0.05475369, 0.11037015, 0.00604317, "FILL", "BUY")
 
   val testOrderUuid = OrderUuid(value = "e606d53c-8d70-11e3-94b5-425861b86ab6")
 
@@ -645,7 +585,6 @@ object BittrexClientSpec {
     currency = "BTC",
     address = "1K37yQZaGrPKNTZ5KNP792xw8f7XbXxetE",
     pendingPayment = false,
-    txId =
-      Some("70cf6fdccb9bd38e1a930e13e4ae6299d678ed6902da710fa3cc8d164f9be126")
+    txId = Some("70cf6fdccb9bd38e1a930e13e4ae6299d678ed6902da710fa3cc8d164f9be126")
   )
 }

@@ -1,16 +1,16 @@
 package com.taintech.bittrex.client
 
 import java.io.InputStream
-import java.security.{KeyStore, SecureRandom}
-import javax.net.ssl.{KeyManagerFactory, SSLContext, TrustManagerFactory}
+import java.security.{ KeyStore, SecureRandom }
+import javax.net.ssl.{ KeyManagerFactory, SSLContext, TrustManagerFactory }
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
-import akka.http.scaladsl.{ConnectionContext, Http, HttpsConnectionContext}
+import akka.http.scaladsl.{ ConnectionContext, Http, HttpsConnectionContext }
 import akka.stream.ActorMaterializer
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.{BeforeAndAfterAll, Suite}
+import org.scalatest.{ BeforeAndAfterAll, Suite }
 
 import scala.concurrent.ExecutionContextExecutor
 
@@ -18,8 +18,8 @@ trait BittrexHTTPSTestServer extends BeforeAndAfterAll with ScalaFutures {
 
   this: Suite =>
 
-  implicit val system: ActorSystem = ActorSystem("test-system")
-  implicit val materializer: ActorMaterializer = ActorMaterializer()
+  implicit val system: ActorSystem                        = ActorSystem("test-system")
+  implicit val materializer: ActorMaterializer            = ActorMaterializer()
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher
 
   protected val hostname: String
@@ -47,9 +47,7 @@ trait BittrexHTTPSTestServer extends BeforeAndAfterAll with ScalaFutures {
     tmf.init(ks)
 
     val sslContext: SSLContext = SSLContext.getInstance("TLS")
-    sslContext.init(keyManagerFactory.getKeyManagers,
-                    tmf.getTrustManagers,
-                    new SecureRandom)
+    sslContext.init(keyManagerFactory.getKeyManagers, tmf.getTrustManagers, new SecureRandom)
     ConnectionContext.https(sslContext)
   }
 
@@ -59,7 +57,8 @@ trait BittrexHTTPSTestServer extends BeforeAndAfterAll with ScalaFutures {
         publicApiRoutes ~ marketApiRoutes ~ accountApiRoutes ~ reject,
         hostname,
         port,
-        connectionContext = https)
+        connectionContext = https
+      )
       .futureValue
   }
 

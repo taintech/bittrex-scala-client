@@ -15,7 +15,7 @@ trait SignProvider {
 
   protected def sign(data: String, secret: String): String = {
     val keyBytes = toBytes(secret)
-    val keySpec = new SecretKeySpec(keyBytes, algorithmName)
+    val keySpec  = new SecretKeySpec(keyBytes, algorithmName)
     algorithmInstance.init(keySpec)
     val dataBytes = algorithmInstance.doFinal(toBytes(data))
     Hex.toHexString(dataBytes)

@@ -57,7 +57,7 @@ final case class OrderBook(buyOrders: List[Order], sellOrders: List[Order])
 
 object OrderBookType extends Enumeration {
   type OrderBookType = Value
-  val Buy: client.OrderBookType.Value = Value("buy")
+  val Buy: client.OrderBookType.Value  = Value("buy")
   val Sell: client.OrderBookType.Value = Value("sell")
   val Both: client.OrderBookType.Value = Value("both")
 }
