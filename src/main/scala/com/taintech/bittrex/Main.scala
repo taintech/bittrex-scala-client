@@ -6,8 +6,8 @@ import akka.stream.scaladsl.{ Sink, Source }
 import com.taintech.bittrex.client.BittrexClient
 import com.typesafe.scalalogging.LazyLogging
 
+import scala.concurrent.ExecutionContextExecutor
 import scala.concurrent.duration._
-import scala.concurrent.{ Await, ExecutionContextExecutor }
 import scala.io.StdIn
 import scala.language.postfixOps
 
@@ -25,13 +25,9 @@ object Main extends App with LazyLogging {
 
   val graph = Source
     .tick(1 second, 2 second, "tick")
-    .to(Sink.foreach { _ =>
-      try {
-        logger.info(Await.result(bittrexClient.getMarketSummaries, timeout).toString)
-      } catch {
-        case e: Exception => logger.error("Failed at tick:", e)
-      }
-    })
+    .mapAsync(1)(_ => bittrexClient.getMarketSummaries)
+    .map(_.toString())
+    .to(Sink.foreach(s => logger.info(s)))
 
   val cancellable: Cancellable = graph.run()
 
