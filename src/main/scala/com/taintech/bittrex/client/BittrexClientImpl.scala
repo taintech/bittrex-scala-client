@@ -1,7 +1,7 @@
 package com.taintech.bittrex.client
 
 import akka.Done
-import akka.actor.ActorSystem
+import akka.actor.{ ActorSystem, CoordinatedShutdown }
 import akka.http.scaladsl.HttpExt
 import akka.http.scaladsl.model.headers.RawHeader
 import akka.http.scaladsl.model.{ HttpHeader, HttpRequest, HttpResponse }
@@ -43,6 +43,12 @@ class BittrexClientImpl(http: HttpExt, config: BittrexClientConfig)(implicit sys
       case ((Failure(e), p))    => p.failure(e)
     }))(Keep.left)
     .run
+
+  CoordinatedShutdown(system).addTask(CoordinatedShutdown.PhaseBeforeServiceUnbind, "httpShutdownTask") { () ⇒
+    http.shutdownAllConnectionPools().map { _ =>
+      Done
+    }
+  }
 
   def getMarkets: Future[List[Market]] =
     getPublic[List[Market]]("getmarkets")
