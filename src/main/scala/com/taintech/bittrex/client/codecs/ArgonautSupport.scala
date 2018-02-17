@@ -198,8 +198,15 @@ trait ArgonautSupport {
       "InvalidAddress"
     )
 
-  def bittrexResponseCodec[T: EncodeJson: DecodeJson]: CodecJson[BittrexResponse[T]] =
-    casecodec3(BittrexResponse.apply[T], BittrexResponse.unapply[T])("success", "message", "result")
+  implicit def bittrexResponse[T](implicit decodeJson: DecodeJson[T]): DecodeJson[BittrexResponse[T]] =
+    DecodeJson(
+      c =>
+        for {
+          success <- (c --\ "success").as[Boolean]
+          message <- (c --\ "message").as[String]
+          result  <- (c --\ "result").as[Option[T]]
+        } yield BittrexResponse(success, message, result)
+    )
 
   implicit val bittrexResponseDoneDecoder: DecodeJson[BittrexResponse[Done]] =
     DecodeJson(
@@ -209,54 +216,6 @@ trait ArgonautSupport {
           message <- (c --\ "message").as[String]
         } yield BittrexResponse(success, message, Some(Done))
     )
-
-  implicit val withdrawalHistoryResponseCodec: CodecJson[BittrexResponse[List[WithdrawalHistory]]] =
-    bittrexResponseCodec[List[WithdrawalHistory]]
-
-  implicit val depositHistoryResponseCodec: CodecJson[BittrexResponse[List[DepositHistory]]] =
-    bittrexResponseCodec[List[DepositHistory]]
-
-  implicit val orderHistoryResponseCodec: CodecJson[BittrexResponse[List[OrderHistory]]] =
-    bittrexResponseCodec[List[OrderHistory]]
-
-  implicit val closedOrderResponseCodec: CodecJson[BittrexResponse[ClosedOrder]] =
-    bittrexResponseCodec[ClosedOrder]
-
-  implicit val cryptoAddressResponseCodec: CodecJson[BittrexResponse[CryptoAddress]] =
-    bittrexResponseCodec[CryptoAddress]
-
-  implicit val balanceResponseCodec: CodecJson[BittrexResponse[Balance]] =
-    bittrexResponseCodec[Balance]
-
-  implicit val balancesResponseCodec: CodecJson[BittrexResponse[List[Balance]]] =
-    bittrexResponseCodec[List[Balance]]
-
-  implicit val openOrdersCodec: CodecJson[BittrexResponse[List[OpenOrder]]] =
-    bittrexResponseCodec[List[OpenOrder]]
-
-  implicit val orderUuidResponseCodec: CodecJson[BittrexResponse[OrderUuid]] =
-    bittrexResponseCodec[OrderUuid]
-
-  implicit val marketHistoryCodec: CodecJson[BittrexResponse[List[Trade]]] =
-    bittrexResponseCodec[List[Trade]]
-
-  implicit val orderBookResponseCodec: CodecJson[BittrexResponse[OrderBook]] =
-    bittrexResponseCodec[OrderBook]
-
-  implicit val ordersResponseCodec: CodecJson[BittrexResponse[List[Order]]] =
-    bittrexResponseCodec[List[Order]]
-
-  implicit val marketSummariesCodec: CodecJson[BittrexResponse[List[MarketSummary]]] =
-    bittrexResponseCodec[List[MarketSummary]]
-
-  implicit val marketsCodec: CodecJson[BittrexResponse[List[Market]]] =
-    bittrexResponseCodec[List[Market]]
-
-  implicit val currenciesCodec: CodecJson[BittrexResponse[List[CurrencyInfo]]] =
-    bittrexResponseCodec[List[CurrencyInfo]]
-
-  implicit val tickerResponseCodec: CodecJson[BittrexResponse[Ticker]] =
-    bittrexResponseCodec[Ticker]
 
   def unmarshallerContentTypes: Seq[ContentTypeRange] =
     List(`application/json`)
