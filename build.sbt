@@ -8,13 +8,13 @@ scalaVersion := "2.12.4"
 
 mainClass in (Compile, run) := Some("com.taintech.bittrex.Main")
 
-val akkaVersion      = "2.5.9"
-val akkaHTTPVersion  = "10.1.0-RC1"
+val akkaVersion      = "2.5.11"
+val akkaHTTPVersion  = "10.1.0-RC2"
 val scalaTestVersion = "3.0.5"
 
 libraryDependencies ++= Seq(
   "ch.qos.logback"             % "logback-classic"      % "1.2.3",
-  "com.typesafe.scala-logging" %% "scala-logging"       % "3.7.2",
+  "com.typesafe.scala-logging" %% "scala-logging"       % "3.8.0",
   "com.typesafe.akka"          %% "akka-actor"          % akkaVersion,
   "com.typesafe.akka"          %% "akka-stream"         % akkaVersion,
   "com.typesafe.akka"          %% "akka-http"           % akkaHTTPVersion,
